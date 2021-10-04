@@ -24,20 +24,11 @@ class SecurityConfig(private val jwtAuthService: JWTAuthService,
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        // HTTP Basic config
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/api/secret-admin-business").hasAnyRole("ADMIN")
-//                .anyRequest().authenticated()
-//                .anyRequest().authenticated()
-//                .and().httpBasic();
-        // JWT config
         http.csrf().disable()
             .authorizeRequests()
-            .antMatchers("/api/secret-admin-business").hasAnyRole("ADMIN")
             .anyRequest().authenticated()
             .and()
-            .addFilter(JWTFilter(authenticationManager(), jwtAuthService)) // Remove sessions since we are now using JWT
+            .addFilter(JWTFilter(authenticationManager(), jwtAuthService))
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 
