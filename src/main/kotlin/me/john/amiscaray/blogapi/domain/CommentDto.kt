@@ -1,7 +1,9 @@
 package me.john.amiscaray.blogapi.domain
 
+import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 
+@ApiModel
 data class CommentDto(
     @ApiModelProperty(value = "id of the comment", required = false)
     private val id: Long,

@@ -2,6 +2,7 @@ package me.john.amiscaray.blogapi.service
 
 import me.john.amiscaray.blogapi.domain.AuthRequest
 import me.john.amiscaray.blogapi.entities.User
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,6 +20,10 @@ class UserServiceImp: UserService {
     }
 
     override fun findUserByUsername(username: String): User {
+        TODO("Not yet implemented")
+    }
+
+    override fun getCurrentlySignedInUser(): UserDetails {
         TODO("Not yet implemented")
     }
 }

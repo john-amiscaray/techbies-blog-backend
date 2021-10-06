@@ -15,7 +15,7 @@ import java.util.*
 
 @Service
 class JWTAuthServiceImpl(private val userDetailsService: UserDetailsService,
-                         private val authManager: AuthenticationManager): JWTAuthService {
+                         val authManager: AuthenticationManager): JWTAuthService {
 
     @Value("\${jwt.secret}")
     private lateinit var secret: String
@@ -23,7 +23,7 @@ class JWTAuthServiceImpl(private val userDetailsService: UserDetailsService,
     override fun getJWT(authRequest: AuthRequest): String {
         try {
             val user = userDetailsService.loadUserByUsername(authRequest.username)
-            val auth: Authentication = authManager.authenticate(
+            authManager.authenticate(
                 UsernamePasswordAuthenticationToken(
                     authRequest.username,
                     authRequest.password,

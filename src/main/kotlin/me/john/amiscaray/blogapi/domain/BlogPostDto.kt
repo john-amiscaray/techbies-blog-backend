@@ -1,7 +1,9 @@
 package me.john.amiscaray.blogapi.domain
 
+import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 
+@ApiModel
 data class BlogPostDto(
     @ApiModelProperty(value = "the id for the blog post", required = false)
     private val id: Long,

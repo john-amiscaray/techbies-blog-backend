@@ -9,6 +9,12 @@ class UserDetailsImpl(private val user: User): UserDetails  {
         return mutableListOf()
     }
 
+    fun getId(){
+
+
+
+    }
+
     override fun getPassword(): String {
         return user.password
     }
