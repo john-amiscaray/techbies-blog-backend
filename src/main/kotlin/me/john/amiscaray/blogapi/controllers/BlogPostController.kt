@@ -37,7 +37,8 @@ class BlogPostController(@Qualifier("notImplemented") private val notImplemented
 
     }
 
-    @ApiOperation(value = "get recent blog posts | NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
+    @ApiOperation(value = "get recent blog posts. Returns array of BlogPostDtos (see models below) " +
+            "| NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
     @GetMapping("/recent")
     fun getRecent(pageable: Pageable): ResponseEntity<Any>{
 
@@ -45,7 +46,8 @@ class BlogPostController(@Qualifier("notImplemented") private val notImplemented
 
     }
 
-    @ApiOperation(value = "get new blog posts | NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
+    @ApiOperation(value = "get new blog posts. Returns array of BlogPostDtos (see models below) " +
+            "| NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
     @GetMapping("/new")
     fun getNew(pageable: Pageable): ResponseEntity<Any>{
 
@@ -53,7 +55,8 @@ class BlogPostController(@Qualifier("notImplemented") private val notImplemented
 
     }
 
-    @ApiOperation(value = "get blog post by id | NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
+    @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below) " +
+            "| NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
     @GetMapping("/post/{postId}")
     fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<Any>{
 

@@ -31,7 +31,7 @@ class SwaggerConfig {
 
         return ApiInfoBuilder()
             .title("Techbies API")
-            .description("API for Techbies project from the unclebigbay and friends bootcamp")
+            .description("API for Techbies blog project from the unclebigbay and friends bootcamp")
             .version("1.0")
             .build()
 

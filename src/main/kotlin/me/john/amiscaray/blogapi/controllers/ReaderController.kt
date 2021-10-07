@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 
 @Api(description = "A controller for managing reader actions")
 @RestController
-@RequestMapping("/action")
+@RequestMapping("/reader")
 class ReaderController(@Qualifier("notImplemented") private val notImplementedResponse: ResponseEntity<Any>) {
 
     @ApiOperation(value = "add or remove a bookmark | NOT IMPLEMENTED")
@@ -21,7 +21,7 @@ class ReaderController(@Qualifier("notImplemented") private val notImplementedRe
 
     }
 
-    @ApiOperation(value = "get user feed | NOT IMPLEMENTED")
+    @ApiOperation(value = "get user feed. Returns array of BlogPostDtos (see models below) | NOT IMPLEMENTED")
     @GetMapping("/feed")
     fun getUserFeed(): ResponseEntity<Any>{
 
