@@ -10,4 +10,4 @@ This project uses the Spring Framework using Kotlin as the language of choice.
 
 ### API Docs
 
-The API docs have not been created yet but it will be added here as soon as it's ready.
+The API docs can be found [here](https://techbies-blog-backend.herokuapp.com/api/swagger-ui.html#). Note: some/all of the endpoints may not be implemented yet. The docs should give a description of which endpoints are implemented.
