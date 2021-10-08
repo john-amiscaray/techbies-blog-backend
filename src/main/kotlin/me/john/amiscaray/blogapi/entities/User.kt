@@ -11,6 +11,8 @@ data class User(
     val email: String,
     val password: String,
 
+    var accountActivated: Boolean = false,
+
     @OneToMany(mappedBy = "author")
     private val blogPosts: Set<BlogPost> = HashSet(),
 

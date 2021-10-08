@@ -1,4 +1,4 @@
-package me.john.amiscaray.blogapi.service
+package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.exceptions.TechbiesAuthException
@@ -19,11 +19,14 @@ class AuthenticationManagerImpl(private val passwordEncoder: PasswordEncoder,
     @Throws(AuthenticationException::class)
     override fun authenticate(authentication: Authentication): Authentication {
 
-/*
-   Assume UsernamePasswordAuthenticationToken, Principle is the username, credentials are the password.
-   Return a UsernamePasswordAuthenticationToken.
- */
+
         val user = userRepo.findUserByEmail(authentication.principal as String) ?: throw TechbiesAuthException("User not found")
+
+        if(!user.accountActivated){
+
+            throw TechbiesAuthException("Account not activated")
+
+        }
 
         if(authentication.principal !is String || authentication.credentials !is String){
 

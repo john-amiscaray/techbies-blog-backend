@@ -1,4 +1,4 @@
-package me.john.amiscaray.blogapi.service
+package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.AuthRequest
@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImpl(private val userRepo: UserRepository, private val jwtAuthService: JWTAuthService,
+class UserServiceImpl(private val userRepo: UserRepository, private val authService: AuthService,
                       private val passwordEncoder: PasswordEncoder): UserService {
 
     @Throws(NoSuchElementException::class)
@@ -22,7 +22,7 @@ class UserServiceImpl(private val userRepo: UserRepository, private val jwtAuthS
     }
 
     override fun loginUser(authRequest: AuthRequest): String {
-        return jwtAuthService.getJWT(authRequest)
+        return authService.getToken(authRequest)
     }
 
     override fun findUserByUsername(username: String): User {
@@ -30,6 +30,10 @@ class UserServiceImpl(private val userRepo: UserRepository, private val jwtAuthS
     }
 
     override fun getCurrentlySignedInUser(): UserDetails {
+        TODO("Not yet implemented")
+    }
+
+    override fun activateAccount(id: Long): UserDetails {
         TODO("Not yet implemented")
     }
 }

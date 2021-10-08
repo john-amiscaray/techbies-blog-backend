@@ -1,4 +1,4 @@
-package me.john.amiscaray.blogapi.service
+package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.domain.AuthRequest
 import me.john.amiscaray.blogapi.entities.User
@@ -15,5 +15,7 @@ interface UserService {
     fun findUserByUsername(username: String): User
 
     fun getCurrentlySignedInUser(): UserDetails
+
+    fun activateAccount(id: Long): UserDetails
 
 }

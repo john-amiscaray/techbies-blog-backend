@@ -1,7 +1,7 @@
 package me.john.amiscaray.blogapi.config
 
 import me.john.amiscaray.blogapi.filter.JWTFilter
-import me.john.amiscaray.blogapi.service.JWTAuthService
+import me.john.amiscaray.blogapi.services.AuthService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,14 +30,14 @@ class SecurityConfig(private val userDetailsService: UserDetailsService): WebSec
     private val logger: Logger = LoggerFactory.getLogger(SecurityConfig::class.java)
 
     @Autowired
-    private lateinit var jwtAuthService: JWTAuthService
+    private lateinit var authService: AuthService
 
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
             .authorizeRequests()
             .anyRequest().authenticated()
             .and()
-            .addFilter(JWTFilter(authenticationManagerBean(), jwtAuthService))
+            .addFilter(JWTFilter(authenticationManagerBean(), authService))
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         logger.info("Configured the filters")
     }

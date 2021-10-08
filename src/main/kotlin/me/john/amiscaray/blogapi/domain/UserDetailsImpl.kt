@@ -36,6 +36,6 @@ class UserDetailsImpl(private val user: User): UserDetails  {
     }
 
     override fun isEnabled(): Boolean {
-        return true
+        return user.accountActivated
     }
 }

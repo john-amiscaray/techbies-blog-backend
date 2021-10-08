@@ -3,8 +3,7 @@ package me.john.amiscaray.blogapi.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.domain.AuthRequest
-import me.john.amiscaray.blogapi.service.UserService
-import org.springframework.beans.factory.annotation.Qualifier
+import me.john.amiscaray.blogapi.services.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

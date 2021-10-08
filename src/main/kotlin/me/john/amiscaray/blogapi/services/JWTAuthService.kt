@@ -1,4 +1,4 @@
-package me.john.amiscaray.blogapi.service
+package me.john.amiscaray.blogapi.services
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -13,25 +13,24 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class JWTAuthServiceImpl(private val userDetailsService: UserDetailsService,
-                         val authManager: AuthenticationManager): JWTAuthService {
+class JWTAuthService(private val userDetailsService: UserDetailsService,
+                     val authManager: AuthenticationManager): AuthService {
 
     @Value("\${jwt.secret}")
     private lateinit var secret: String
 
-    override fun getJWT(authRequest: AuthRequest): String {
-        try {
-            val user = userDetailsService.loadUserByUsername(authRequest.email)
-            authManager.authenticate(
-                UsernamePasswordAuthenticationToken(
-                    authRequest.email,
-                    authRequest.password,
-                    user.authorities
-                )
+    @Throws(AuthenticationException::class)
+    override fun getToken(authRequest: AuthRequest): String {
+
+        val user = userDetailsService.loadUserByUsername(authRequest.email)
+        authManager.authenticate(
+            UsernamePasswordAuthenticationToken(
+                authRequest.email,
+                authRequest.password,
+                user.authorities
             )
-        } catch (ex: AuthenticationException) {
-            throw IllegalArgumentException("User not found")
-        }
+        )
+
 
         val tenHours = 36000000L
         return JWT.create()
@@ -40,7 +39,7 @@ class JWTAuthServiceImpl(private val userDetailsService: UserDetailsService,
             .sign(Algorithm.HMAC512(secret.toByteArray()))
     }
 
-    override fun verifyJWT(token: String): UsernamePasswordAuthenticationToken {
+    override fun verifyToken(token: String): UsernamePasswordAuthenticationToken {
 
         // Decode the token, verify it and get the subject
         val username = JWT.require(Algorithm.HMAC512(secret.toByteArray()))

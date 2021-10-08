@@ -1,20 +1,17 @@
 package me.john.amiscaray.blogapi.filter
 
-import me.john.amiscaray.blogapi.service.JWTAuthService
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import me.john.amiscaray.blogapi.services.AuthService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import org.springframework.stereotype.Component
 import java.io.IOException
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class JWTFilter(authManager: AuthenticationManager, private val jwtAuthService: JWTAuthService)
+class JWTFilter(authManager: AuthenticationManager, private val authService: AuthService)
     : BasicAuthenticationFilter(authManager) {
 
     @Throws(ServletException::class, IOException::class)
@@ -29,7 +26,7 @@ class JWTFilter(authManager: AuthenticationManager, private val jwtAuthService: 
         // Remove the "Bearer" prefix
         val token = authorizationHeader.substring(7)
         // Verify token
-        val auth: UsernamePasswordAuthenticationToken = jwtAuthService.verifyJWT(token)
+        val auth: UsernamePasswordAuthenticationToken = authService.verifyToken(token)
         SecurityContextHolder.getContext().authentication = auth
         // send request through next filter
         filterChain.doFilter(httpServletRequest, httpServletResponse)

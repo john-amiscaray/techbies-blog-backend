@@ -1,4 +1,4 @@
-package me.john.amiscaray.blogapi.service
+package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.UserDetailsImpl
