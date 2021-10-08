@@ -27,8 +27,8 @@ class AuthController(private val userService: UserService) {
     }
 
     @ApiOperation(value = "Login to the application", notes = "Returns a token for authentication purposes." +
-            " The Token must be put in the Authorization header for every non-authentication request like so " +
-            "'Bearer <TOKEN>'")
+            " The Token must be put in the Authorization header for every non-authentication request like so: " +
+            "Bearer TOKEN")
     @PostMapping("/login")
     fun logIn(@RequestBody authRequest: AuthRequest): ResponseEntity<String>{
 
