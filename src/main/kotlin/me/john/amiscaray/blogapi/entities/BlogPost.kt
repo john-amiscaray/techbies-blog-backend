@@ -14,8 +14,15 @@ data class BlogPost(
     private val id: Long,
     private val title: String,
     private val content: String,
-    private val likes: Int,
+    private val wowReactions: Int,
+    private val likeReactions: Int,
+    private val worriedReactions: Int,
+    private val sadReactions: Int,
+    private val angryReactions: Int,
     private val tags: String,
+
+    @Lob
+    private val coverImage: ByteArray,
 
     @ManyToOne
     private val author: User,
