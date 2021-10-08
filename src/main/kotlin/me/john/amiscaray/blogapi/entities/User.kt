@@ -8,7 +8,7 @@ data class User(
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long,
     @Column(unique = true)
-    val username: String,
+    val email: String,
     val password: String,
 
     @OneToMany(mappedBy = "author")

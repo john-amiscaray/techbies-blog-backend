@@ -17,7 +17,7 @@ class UserServiceImpl(private val userRepo: UserRepository, private val jwtAuthS
     }
 
     override fun signUpUser(authRequest: AuthRequest) {
-        val newUser = User(-1, authRequest.username, passwordEncoder.encode(authRequest.password))
+        val newUser = User(-1, authRequest.email, passwordEncoder.encode(authRequest.password))
         userRepo.save(newUser)
     }
 

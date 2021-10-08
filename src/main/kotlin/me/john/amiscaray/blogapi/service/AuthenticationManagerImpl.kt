@@ -5,7 +5,6 @@ import me.john.amiscaray.blogapi.exceptions.TechbiesAuthException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -24,7 +23,7 @@ class AuthenticationManagerImpl(private val passwordEncoder: PasswordEncoder,
    Assume UsernamePasswordAuthenticationToken, Principle is the username, credentials are the password.
    Return a UsernamePasswordAuthenticationToken.
  */
-        val user = userRepo.findUserByUsername(authentication.principal as String) ?: throw TechbiesAuthException("User not found")
+        val user = userRepo.findUserByEmail(authentication.principal as String) ?: throw TechbiesAuthException("User not found")
 
         if(authentication.principal !is String || authentication.credentials !is String){
 

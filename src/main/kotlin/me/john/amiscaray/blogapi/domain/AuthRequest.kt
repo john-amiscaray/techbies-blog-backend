@@ -7,13 +7,13 @@ import me.john.amiscaray.blogapi.entities.User
 @ApiModel
 data class AuthRequest(
     @ApiModelProperty(value = "username", required = true)
-    val username: String,
+    val email: String,
     @ApiModelProperty(value = "password", required = true)
     val password: String){
 
     fun toNewUser(): User{
 
-        return User(-1, username, password)
+        return User(-1, email, password)
 
     }
 

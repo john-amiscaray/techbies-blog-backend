@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
@@ -22,10 +21,10 @@ class JWTAuthServiceImpl(private val userDetailsService: UserDetailsService,
 
     override fun getJWT(authRequest: AuthRequest): String {
         try {
-            val user = userDetailsService.loadUserByUsername(authRequest.username)
+            val user = userDetailsService.loadUserByUsername(authRequest.email)
             authManager.authenticate(
                 UsernamePasswordAuthenticationToken(
-                    authRequest.username,
+                    authRequest.email,
                     authRequest.password,
                     user.authorities
                 )
@@ -36,7 +35,7 @@ class JWTAuthServiceImpl(private val userDetailsService: UserDetailsService,
 
         val tenHours = 36000000L
         return JWT.create()
-            .withSubject(authRequest.username)
+            .withSubject(authRequest.email)
             .withExpiresAt(Date(System.currentTimeMillis() + tenHours))
             .sign(Algorithm.HMAC512(secret.toByteArray()))
     }
