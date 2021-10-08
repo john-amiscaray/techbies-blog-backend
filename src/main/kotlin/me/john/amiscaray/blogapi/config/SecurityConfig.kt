@@ -5,6 +5,7 @@ import me.john.amiscaray.blogapi.service.JWTAuthService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -16,10 +17,15 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(private val userDetailsService: UserDetailsService): WebSecurityConfigurerAdapter() {
+
+    @Value("\${cors.allowed.origins}")
+    private lateinit var allowedOrigins: String
 
     private val logger: Logger = LoggerFactory.getLogger(SecurityConfig::class.java)
 
@@ -57,6 +63,20 @@ class SecurityConfig(private val userDetailsService: UserDetailsService): WebSec
     @Bean
     fun getPasswordEncoder(): PasswordEncoder? {
         return BCryptPasswordEncoder(10)
+    }
+
+    @Bean
+    fun cors(): WebMvcConfigurer {
+
+        return object : WebMvcConfigurer {
+            override fun addCorsMappings(registry: CorsRegistry) {
+                registry.addMapping("/**")
+                    .allowedOrigins(allowedOrigins)
+                    .allowedMethods("*")
+
+            }
+        }
+
     }
 
 }
