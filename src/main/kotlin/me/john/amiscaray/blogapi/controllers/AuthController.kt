@@ -3,6 +3,7 @@ package me.john.amiscaray.blogapi.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.domain.AuthRequest
+import me.john.amiscaray.blogapi.service.UserService
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,23 +14,25 @@ import org.springframework.web.bind.annotation.RestController
 @Api(description = "Controller for the Authentication requests")
 @RestController
 @RequestMapping("/auth")
-class AuthController(@Qualifier("notImplemented") private val notImplementedResponse: ResponseEntity<Any>) {
+class AuthController(private val userService: UserService) {
 
-    @ApiOperation(value = "Sign up for the application | NOT IMPLEMENTED", notes = "Must verify email afterwards")
+    @ApiOperation(value = "Sign up for the application")
     @PostMapping("/signup")
     fun signUp(@RequestBody authRequest: AuthRequest): ResponseEntity<Any>{
 
-        return notImplementedResponse
+        userService.signUpUser(authRequest)
+
+        return ResponseEntity.noContent().build()
 
     }
 
-    @ApiOperation(value = "Login to the application | NOT IMPLEMENTED", notes = "Returns a token and userID in this format: " +
-            "'<TOKEN> <ID>'. The TOKEN must be put in the authorization header like so 'Bearer <TOKEN>'. The ID should be " +
-            "stored for future API operations")
+    @ApiOperation(value = "Login to the application", notes = "Returns a token for authentication purposes." +
+            " The Token must be put in the Authorization header for every non-authentication request like so " +
+            "'Bearer <TOKEN>'")
     @PostMapping("/login")
-    fun logIn(@RequestBody authRequest: AuthRequest): ResponseEntity<Any>{
+    fun logIn(@RequestBody authRequest: AuthRequest): ResponseEntity<String>{
 
-        return notImplementedResponse
+        return ResponseEntity.ok(userService.loginUser(authRequest))
 
     }
 

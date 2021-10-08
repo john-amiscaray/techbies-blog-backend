@@ -52,8 +52,8 @@ class JWTAuthServiceImpl(private val userDetailsService: UserDetailsService,
         if (username != null) {
             val userDetails = userDetailsService.loadUserByUsername(username)
             return UsernamePasswordAuthenticationToken(
-                userDetails,
-                null, userDetails.authorities
+                userDetails.username,
+                userDetails.password, userDetails.authorities
             )
         }
         throw BadCredentialsException("Failed to verify the JWT token")

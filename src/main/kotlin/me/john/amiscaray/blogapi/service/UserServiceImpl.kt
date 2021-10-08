@@ -1,22 +1,28 @@
 package me.john.amiscaray.blogapi.service
 
+import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.AuthRequest
 import me.john.amiscaray.blogapi.entities.User
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImp: UserService {
+class UserServiceImpl(private val userRepo: UserRepository, private val jwtAuthService: JWTAuthService,
+                      private val passwordEncoder: PasswordEncoder): UserService {
+
+    @Throws(NoSuchElementException::class)
     override fun findUserById(id: Long): User {
-        TODO("Not yet implemented")
+        return userRepo.findById(id).orElseThrow()
     }
 
     override fun signUpUser(authRequest: AuthRequest) {
-        TODO("Not yet implemented")
+        val newUser = User(-1, authRequest.username, passwordEncoder.encode(authRequest.password))
+        userRepo.save(newUser)
     }
 
     override fun loginUser(authRequest: AuthRequest): String {
-        TODO("Not yet implemented")
+        return jwtAuthService.getJWT(authRequest)
     }
 
     override fun findUserByUsername(username: String): User {
