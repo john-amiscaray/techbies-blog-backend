@@ -16,6 +16,6 @@ interface UserService {
 
     fun getCurrentlySignedInUser(): UserDetails
 
-    fun activateAccount(id: Long): UserDetails
+    fun activateAccount(id: Long)
 
 }

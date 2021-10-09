@@ -37,7 +37,8 @@ class UserServiceImpl(private val userRepo: UserRepository, private val authServ
         TODO("Not yet implemented")
     }
 
-    override fun activateAccount(id: Long): UserDetails {
-        TODO("Not yet implemented")
+    override fun activateAccount(id: Long) {
+        val user = userRepo.findById(id).orElseThrow()
+        user.accountActivated = true
     }
 }
