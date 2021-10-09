@@ -5,8 +5,10 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.scheduling.annotation.EnableAsync
 
 @SpringBootApplication
+@EnableAsync
 class BlogApiApplication{
 
     @Bean("notImplemented")
