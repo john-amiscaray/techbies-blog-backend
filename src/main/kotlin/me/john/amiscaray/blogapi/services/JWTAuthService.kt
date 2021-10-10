@@ -17,7 +17,7 @@ import kotlin.NoSuchElementException
 
 @Service
 class JWTAuthService(private val userDetailsService: UserDetailsService,
-                     val authManager: AuthenticationManager, private val userRepo: UserRepository): AuthService {
+                     private val authManager: AuthenticationManager, private val userRepo: UserRepository): AuthService {
 
     @Value("\${app.secret}")
     private lateinit var secret: String

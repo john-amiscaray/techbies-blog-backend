@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
@@ -22,22 +23,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(private val userDetailsService: UserDetailsService): WebSecurityConfigurerAdapter() {
+class SecurityConfig(private val userDetailsService: UserDetailsService,
+                     private val jwtFilter: JWTFilter,
+                     private val passwordEncoder: PasswordEncoder): WebSecurityConfigurerAdapter() {
 
-    @Value("\${cors.allowed.origins}")
-    private lateinit var allowedOrigins: String
 
     private val logger: Logger = LoggerFactory.getLogger(SecurityConfig::class.java)
-
-    @Autowired
-    private lateinit var authService: AuthService
 
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
             .authorizeRequests()
             .anyRequest().authenticated()
             .and()
-            .addFilter(JWTFilter(authenticationManagerBean(), authService))
+            .addFilter(jwtFilter)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         logger.info("Configured the filters")
     }
@@ -58,26 +56,7 @@ class SecurityConfig(private val userDetailsService: UserDetailsService): WebSec
 
     @Throws(java.lang.Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(userDetailsService).passwordEncoder(getPasswordEncoder())
-    }
-
-    @Bean
-    fun getPasswordEncoder(): PasswordEncoder? {
-        return BCryptPasswordEncoder(10)
-    }
-
-    @Bean
-    fun cors(): WebMvcConfigurer {
-
-        return object : WebMvcConfigurer {
-            override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/**")
-                    .allowedOrigins(allowedOrigins)
-                    .allowedMethods("*")
-
-            }
-        }
-
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder)
     }
 
 }

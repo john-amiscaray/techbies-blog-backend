@@ -4,12 +4,13 @@ import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.AuthRequest
 import me.john.amiscaray.blogapi.entities.User
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImpl(private val userRepo: UserRepository, private val authService: AuthService,
+class UserServiceImpl(private val userRepo: UserRepository, private val authService: AuthService, private val authManager: AuthenticationManager,
                       private val passwordEncoder: PasswordEncoder, private val mailService: MailService): UserService {
 
     @Value("\${app.origin}")
