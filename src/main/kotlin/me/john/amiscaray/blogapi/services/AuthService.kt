@@ -9,4 +9,8 @@ interface AuthService {
 
     fun verifyToken(token: String): UsernamePasswordAuthenticationToken
 
+    fun getSignupToken(authRequest: AuthRequest): String
+
+    fun verifySignupToken(token: String): String
+
 }

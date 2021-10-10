@@ -18,4 +18,6 @@ interface UserService {
 
     fun activateAccount(id: Long)
 
+    fun activateAccount(email: String)
+
 }

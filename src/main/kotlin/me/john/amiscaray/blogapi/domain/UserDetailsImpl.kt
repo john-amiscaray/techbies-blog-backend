@@ -9,9 +9,9 @@ class UserDetailsImpl(private val user: User): UserDetails  {
         return mutableListOf()
     }
 
-    fun getId(){
+    fun getId(): Long{
 
-
+        return user.id
 
     }
 

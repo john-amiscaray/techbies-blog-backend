@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
+import org.thymeleaf.context.WebContext
 import org.thymeleaf.spring5.SpringTemplateEngine
 
 @Service
@@ -15,6 +16,9 @@ class ThymeLeafMailService(private val mailSender: JavaMailSender,
 
     @Value("\${app.mail.from}")
     private lateinit var from: String
+
+    @Value("\${app.origin}")
+    private lateinit var origin: String
 
     @Async
     override fun sendTemplatedEmail(htmlBody: String, to: String, subject: String) {

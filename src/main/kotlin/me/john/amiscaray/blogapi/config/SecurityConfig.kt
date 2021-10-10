@@ -53,6 +53,7 @@ class SecurityConfig(private val userDetailsService: UserDetailsService): WebSec
             .antMatchers("/v2/**")
             .antMatchers("/webjars/**")
             .antMatchers("/swagger-resources/**")
+            .antMatchers("/views/activate/account")
     }
 
     @Throws(java.lang.Exception::class)

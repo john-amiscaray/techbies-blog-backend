@@ -15,7 +15,7 @@ class MailConfig {
     @Bean
     fun thymeleafTemplateResolver(): ITemplateResolver {
         val templateResolver = ClassLoaderTemplateResolver()
-        templateResolver.prefix = "mail-templates/"
+        templateResolver.prefix = "templates/"
         templateResolver.suffix = ".html"
         templateResolver.templateMode = TemplateMode.HTML
         templateResolver.characterEncoding = "UTF-8"

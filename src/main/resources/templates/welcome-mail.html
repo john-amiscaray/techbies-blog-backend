@@ -13,7 +13,8 @@
         </header>
         <p>
             Hello <span th:text="${user}">{loading name...}</span>, thanks for signing up for
-            Techbie's Blog. Please click <a href="https://google.com" >here</a> to confirm your email.
+            Techbie's Blog. Please click
+            <a th:href="${origin} + 'api/views/activate/account?' + 'token=' + ${token}" >here</a> to confirm your email.
         </p>
     </article>
 </main>
