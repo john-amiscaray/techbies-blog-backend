@@ -43,7 +43,7 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
 
     override fun saveBlogPost(blogPost: BlogPostDto): BlogPost {
         val author = userService.getCurrentlySignedInUser()
-        val blogPostEntity = BlogPost(id=-1,
+        val blogPostEntity = BlogPost(
             title=blogPost.title,
             content=blogPost.content,
             tags=blogPost.tags,

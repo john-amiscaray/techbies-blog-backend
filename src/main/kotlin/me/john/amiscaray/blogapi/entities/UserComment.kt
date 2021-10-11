@@ -4,15 +4,12 @@ import javax.persistence.*
 
 @Entity
 data class UserComment(
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private val id: Long,
     @ManyToOne
     private val author: User,
     private val content: String,
     @ManyToOne
     private val blogPost: BlogPost
-){
+): BaseEntity(-1){
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

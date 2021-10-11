@@ -4,9 +4,6 @@ import javax.persistence.*
 
 @Entity
 data class User(
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long,
     @Column(unique = true)
     val email: String,
     val password: String,
@@ -27,7 +24,7 @@ data class User(
     @OneToMany(mappedBy = "author")
     private val comments: Set<UserComment> = HashSet()
 
-){
+): BaseEntity(-1){
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

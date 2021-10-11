@@ -9,9 +9,7 @@ import javax.persistence.*
 // TODO : Add time created as field
 @Entity
 data class BlogPost(
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long,
+
     val title: String,
     val content: String,
     val tags: String,
@@ -33,7 +31,7 @@ data class BlogPost(
     @ManyToMany(mappedBy = "bookMarks")
     val bookMarkedBy: Set<User> = emptySet()
 
-){
+): BaseEntity(-1) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

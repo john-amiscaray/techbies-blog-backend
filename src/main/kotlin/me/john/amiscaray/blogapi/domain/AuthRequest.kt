@@ -13,7 +13,7 @@ data class AuthRequest(
 
     fun toNewUser(): User{
 
-        return User(-1, email, password)
+        return User(email, password)
 
     }
 

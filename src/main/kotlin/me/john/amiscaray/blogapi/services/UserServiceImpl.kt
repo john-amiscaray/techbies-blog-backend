@@ -26,7 +26,7 @@ class UserServiceImpl(private val userRepo: UserRepository, private val authServ
     }
 
     override fun signUpUser(authRequest: AuthRequest) {
-        userRepo.save(User(-1, authRequest.email, passwordEncoder.encode(authRequest.password)))
+        userRepo.save(User(authRequest.email, passwordEncoder.encode(authRequest.password)))
         val templateVars: MutableMap<String, Any> = mutableMapOf()
         templateVars["user"] = authRequest.email.split("@")[0]
         templateVars["token"] = authService.getSignupToken(authRequest)
