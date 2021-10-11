@@ -12,7 +12,6 @@ import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@Service
 class JWTFilter(authManager: AuthenticationManager, private val authService: AuthService)
     : BasicAuthenticationFilter(authManager) {
 

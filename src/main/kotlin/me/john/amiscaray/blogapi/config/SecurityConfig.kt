@@ -24,7 +24,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(private val userDetailsService: UserDetailsService,
-                     private val jwtFilter: JWTFilter,
+                     private val authManager: AuthenticationManager,
+                     private val authService: AuthService,
                      private val passwordEncoder: PasswordEncoder): WebSecurityConfigurerAdapter() {
 
 
@@ -35,7 +36,7 @@ class SecurityConfig(private val userDetailsService: UserDetailsService,
             .authorizeRequests()
             .anyRequest().authenticated()
             .and()
-            .addFilter(jwtFilter)
+            .addFilter(JWTFilter(authManager, authService))
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         logger.info("Configured the filters")
     }
