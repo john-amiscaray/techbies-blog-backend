@@ -3,21 +3,32 @@ package me.john.amiscaray.blogapi.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.domain.BlogPostDto
+import me.john.amiscaray.blogapi.services.BlogPostService
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URI
 
 @Api(description = "Controller for managing blog posts")
 @RestController
 @RequestMapping("/blog")
-class BlogPostController(@Qualifier("notImplemented") private val notImplementedResponse: ResponseEntity<Any>) {
+class BlogPostController(private val blogPostService: BlogPostService,
+    @Qualifier("notImplemented") private val notImplementedResponse: ResponseEntity<Any>) {
 
-    @ApiOperation(value = "post a blog post | NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
+    @Value("\${app.origin}")
+    private lateinit var origin: String
+
+    @ApiOperation(value = "post a blog post", notes = "If successful, returns 201 " +
+            "response with path to get that new blog post")
     @PostMapping
     fun createBlogPost(@RequestBody blogPostDto: BlogPostDto): ResponseEntity<Any>{
 
-        return notImplementedResponse
+        val newPost = blogPostService.saveBlogPost(blogPostDto)
+
+        return ResponseEntity.created(URI("${origin}api/blog/post/${newPost.id}"))
+            .build()
 
     }
 

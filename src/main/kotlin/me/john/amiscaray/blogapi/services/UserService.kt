@@ -14,7 +14,7 @@ interface UserService {
 
     fun findUserByUsername(username: String): User
 
-    fun getCurrentlySignedInUser(): UserDetails
+    fun getCurrentlySignedInUser(): User
 
     fun activateAccount(id: Long)
 

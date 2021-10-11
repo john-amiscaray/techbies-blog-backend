@@ -6,11 +6,11 @@ import io.swagger.annotations.ApiModelProperty
 @ApiModel
 data class BlogPostDto(
     @ApiModelProperty(value = "the id for the blog post", required = false)
-    private val id: Long,
+    val id: Long,
     @ApiModelProperty(value = "title of the blog post", required = true)
-    private val title: String,
+    val title: String,
     @ApiModelProperty(value = "title of the blog post", required = true)
-    private val content: String,
-    @ApiModelProperty(value = "id of the author of the blog post", required = true)
-    private val authorId: Long
+    val content: String,
+    @ApiModelProperty(value = "a comma separated list of tags to give the post", required = true)
+    val tags: String
 )

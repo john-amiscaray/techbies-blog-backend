@@ -23,7 +23,7 @@ interface BlogPostService {
 
     fun getUserFeed(userId: Long): Set<BlogPost>
 
-    fun saveBlogPost(blogPost: BlogPostDto)
+    fun saveBlogPost(blogPost: BlogPostDto): BlogPost
 
     fun deleteBlogPost(id: Long)
 

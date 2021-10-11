@@ -1,5 +1,7 @@
 package me.john.amiscaray.blogapi.services
 
+import me.john.amiscaray.blogapi.data.BlogPostRepository
+import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.BlogPostDto
 import me.john.amiscaray.blogapi.domain.BookmarkRequest
 import me.john.amiscaray.blogapi.domain.CommentDto
@@ -9,7 +11,8 @@ import org.springframework.stereotype.Service
 import javax.xml.stream.events.Comment
 
 @Service
-class BlogPostServiceImp : BlogPostService {
+class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository, private val userService: UserService,
+                         private val userRepo: UserRepository) : BlogPostService {
     override fun getBlogPostsOfUser(userId: Long): Set<BlogPost> {
         TODO("Not yet implemented")
     }
@@ -38,8 +41,15 @@ class BlogPostServiceImp : BlogPostService {
         TODO("Not yet implemented")
     }
 
-    override fun saveBlogPost(blogPost: BlogPostDto) {
-        TODO("Not yet implemented")
+    override fun saveBlogPost(blogPost: BlogPostDto): BlogPost {
+        val author = userService.getCurrentlySignedInUser()
+        val blogPostEntity = BlogPost(id=-1,
+            title=blogPost.title,
+            content=blogPost.content,
+            tags=blogPost.tags,
+            author=author
+        )
+        return blogPostRepo.save(blogPostEntity)
     }
 
     override fun deleteBlogPost(id: Long) {

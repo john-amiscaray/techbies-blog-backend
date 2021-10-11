@@ -2,15 +2,19 @@ package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.AuthRequest
+import me.john.amiscaray.blogapi.domain.UserDetailsImpl
 import me.john.amiscaray.blogapi.entities.User
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
+
 @Service
-class UserServiceImpl(private val userRepo: UserRepository, private val authService: AuthService, private val authManager: AuthenticationManager,
+class UserServiceImpl(private val userRepo: UserRepository, private val authService: AuthService,
                       private val passwordEncoder: PasswordEncoder, private val mailService: MailService): UserService {
 
     @Value("\${app.origin}")
@@ -39,8 +43,9 @@ class UserServiceImpl(private val userRepo: UserRepository, private val authServ
         TODO("Not yet implemented")
     }
 
-    override fun getCurrentlySignedInUser(): UserDetails {
-        TODO("Not yet implemented")
+    override fun getCurrentlySignedInUser(): User {
+        val auth = SecurityContextHolder.getContext().authentication as UsernamePasswordAuthenticationToken
+        return userRepo.findUserByEmail(auth.principal as String) ?: throw NoSuchElementException("User not found")
     }
 
     override fun activateAccount(id: Long) {

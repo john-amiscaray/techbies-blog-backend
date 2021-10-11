@@ -11,27 +11,27 @@ import javax.persistence.*
 data class BlogPost(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private val id: Long,
-    private val title: String,
-    private val content: String,
-    private val wowReactions: Int,
-    private val likeReactions: Int,
-    private val worriedReactions: Int,
-    private val sadReactions: Int,
-    private val angryReactions: Int,
-    private val tags: String,
-
-    @Lob
-    private val coverImage: ByteArray,
+    val id: Long,
+    val title: String,
+    val content: String,
+    val tags: String,
 
     @ManyToOne
-    private val author: User,
+    val author: User,
+
+    val wowReactions: Int = 0,
+    val likeReactions: Int = 0,
+    val worriedReactions: Int = 0,
+    val sadReactions: Int = 0,
+    val angryReactions: Int = 0,
+    @Lob
+    val coverImage: ByteArray? = null,
 
     @OneToMany(mappedBy = "blogPost")
-    private val comments: Set<UserComment>,
+    val comments: Set<UserComment> = emptySet(),
 
     @ManyToMany(mappedBy = "bookMarks")
-    private val bookMarkedBy: Set<User>
+    val bookMarkedBy: Set<User> = emptySet()
 
 ){
 
