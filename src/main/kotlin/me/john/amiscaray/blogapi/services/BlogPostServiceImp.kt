@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service
 import javax.xml.stream.events.Comment
 
 @Service
-class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository, private val userService: UserService,
-                         private val userRepo: UserRepository) : BlogPostService {
-    override fun getBlogPostsOfUser(userId: Long): Set<BlogPost> {
+class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
+                         private val userService: UserService) : BlogPostService {
+    override fun getBlogPostsOfUser(): Set<BlogPost> {
         TODO("Not yet implemented")
     }
 
-    override fun getBookMarksOfUser(userId: Long): Set<BlogPost> {
+    override fun getBookMarksOfUser(): Set<BlogPost> {
         TODO("Not yet implemented")
     }
 
@@ -29,7 +29,7 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository, private v
         TODO("Not yet implemented")
     }
 
-    override fun commentOnPost(userId: Long, blogPostId: Long, comment: CommentDto) {
+    override fun commentOnPost(blogPostId: Long, comment: CommentDto) {
         TODO("Not yet implemented")
     }
 
@@ -37,7 +37,7 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository, private v
         TODO("Not yet implemented")
     }
 
-    override fun getUserFeed(userId: Long): Set<BlogPost> {
+    override fun getUserFeed(): Set<BlogPost> {
         TODO("Not yet implemented")
     }
 
@@ -58,5 +58,10 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository, private v
 
     override fun editBlogPost(id: Long, blogPost: BlogPostDto) {
         TODO("Not yet implemented")
+    }
+
+    override fun getBlogPostById(id: Long): BlogPostDto {
+        val blogPost = blogPostRepo.findById(id).orElseThrow()
+        return BlogPostDto(blogPost.id, blogPost.title, blogPost.content, blogPost.tags)
     }
 }

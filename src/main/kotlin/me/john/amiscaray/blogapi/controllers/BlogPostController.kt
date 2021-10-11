@@ -23,12 +23,16 @@ class BlogPostController(private val blogPostService: BlogPostService,
     @ApiOperation(value = "post a blog post", notes = "If successful, returns 201 " +
             "response with path to get that new blog post")
     @PostMapping
-    fun createBlogPost(@RequestBody blogPostDto: BlogPostDto): ResponseEntity<Any>{
+    fun createBlogPost(@RequestBody blogPostDto: BlogPostDto): ResponseEntity<Void>{
 
-        val newPost = blogPostService.saveBlogPost(blogPostDto)
-
-        return ResponseEntity.created(URI("${origin}api/blog/post/${newPost.id}"))
-            .build()
+        return try {
+            val newPost = blogPostService.saveBlogPost(blogPostDto)
+            ResponseEntity.created(URI("${origin}api/blog/post/${newPost.id}"))
+                .build()
+        }catch(ex: NoSuchElementException){
+            ResponseEntity.internalServerError()
+                .build()
+        }
 
     }
 
@@ -66,12 +70,16 @@ class BlogPostController(private val blogPostService: BlogPostService,
 
     }
 
-    @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below) " +
-            "| NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
+    @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below) ")
     @GetMapping("/post/{postId}")
-    fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<Any>{
+    fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<BlogPostDto>{
 
-        return notImplementedResponse
+        return try{
+            ResponseEntity.ok(blogPostService.getBlogPostById(id))
+        }catch(ex: NoSuchElementException){
+            ResponseEntity.notFound()
+                .build()
+        }
 
     }
 
