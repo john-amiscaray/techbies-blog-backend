@@ -2,9 +2,6 @@ package me.john.amiscaray.blogapi.entities
 
 import javax.persistence.*
 
-
-// TODO : Add cover image field
-// TODO : Add read by field (many to many)
 // TODO : Change likes to separate fields for different reactions
 // TODO : Add time created as field
 @Entity
@@ -26,10 +23,13 @@ data class BlogPost(
     val coverImage: ByteArray? = null,
 
     @OneToMany(mappedBy = "blogPost")
-    val comments: Set<UserComment> = emptySet(),
+    val comments: Set<UserComment> = HashSet(),
 
     @ManyToMany(mappedBy = "bookMarks")
-    val bookMarkedBy: Set<User> = emptySet()
+    val bookMarkedBy: Set<User> = HashSet(),
+
+    @ManyToMany(mappedBy = "blogPostsRead")
+    val readBy: Set<User> = HashSet()
 
 ): BaseEntity(-1) {
 
