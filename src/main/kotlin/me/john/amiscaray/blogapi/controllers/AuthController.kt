@@ -18,7 +18,8 @@ import javax.servlet.http.HttpServletResponse
 @RequestMapping("/auth")
 class AuthController(private val userService: UserService) {
 
-    @ApiOperation(value = "Sign up for the application")
+    @ApiOperation(value = "Sign up for the application. Email must be confirmed afterwards. " +
+            "Check your email for a confirmation link.")
     @PostMapping("/signup")
     fun signUp(@RequestBody authRequest: AuthRequest): ResponseEntity<Any>{
 
