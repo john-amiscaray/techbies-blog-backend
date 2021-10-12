@@ -53,7 +53,8 @@ class BlogPostController(private val blogPostService: BlogPostService,
     }
 
     @ApiOperation(value = "get recent blog posts. Returns array of BlogPostDtos (see models below) " +
-            "| NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
+            "| NOT IMPLEMENTED", notes = "You can set how many blog posts you want to retrieve via query parameter. " +
+            "See query parameters in the docs for this endpoint.")
     @GetMapping("/recent")
     fun getRecent(pageable: Pageable): ResponseEntity<Any>{
 

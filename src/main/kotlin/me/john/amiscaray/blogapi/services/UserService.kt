@@ -20,4 +20,6 @@ interface UserService {
 
     fun activateAccount(email: String)
 
+    fun deleteUnactivatedUser(email: String)
+
 }

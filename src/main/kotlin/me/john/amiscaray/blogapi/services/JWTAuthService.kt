@@ -22,7 +22,9 @@ class JWTAuthService(private val userDetailsService: UserDetailsService,
     @Value("\${app.secret}")
     private lateinit var secret: String
 
-    private val tenHours = 36000000L
+    //private val tenHours = 36000000L
+
+    private val tenHours = 60000L // 1 minute for testing
 
     @Throws(AuthenticationException::class)
     override fun getToken(authRequest: AuthRequest): String {

@@ -8,6 +8,7 @@ import me.john.amiscaray.blogapi.domain.CommentDto
 import me.john.amiscaray.blogapi.domain.ReactionRequest
 import me.john.amiscaray.blogapi.entities.BlogPost
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 import javax.xml.stream.events.Comment
 
 @Service
@@ -47,7 +48,8 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
             title=blogPost.title,
             content=blogPost.content,
             tags=blogPost.tags,
-            author=author
+            author=author,
+            timePosted=Timestamp(System.currentTimeMillis())
         )
         return blogPostRepo.save(blogPostEntity)
     }

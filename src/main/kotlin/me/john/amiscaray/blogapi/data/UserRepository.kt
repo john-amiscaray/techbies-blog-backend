@@ -9,4 +9,6 @@ interface UserRepository : JpaRepository<User, Long>{
 
     fun findUserByEmail(email: String): User?
 
+    fun deleteUserByEmail(email: String)
+
 }

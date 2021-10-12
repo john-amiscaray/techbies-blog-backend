@@ -3,20 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <link rel="stylesheet" href="welcome-mail.css">
+    <style>
+        body{
+
+            font-family: Tahoma, serif;
+
+        }
+
+        a{
+
+            text-decoration: none;
+            color: deepskyblue;
+
+        }
+
+        a:hover{
+
+            color: aqua;
+
+        }
+    </style>
 </head>
 <body>
 <main>
-    <article>
+    <main>
         <header>
             <h1>Welcome to Techbie's Blog</h1>
         </header>
         <p>
             Hello <span th:text="${user}">{loading name...}</span>, thanks for signing up for
             Techbie's Blog. Please click
-            <a th:href="${origin} + 'api/views/activate/account?' + 'token=' + ${token}" >here</a> to confirm your email.
+            <a th:href="${origin} + 'api/views/activate/account?' + 'token=' + ${token} + '&email=' + ${email}" >here</a>
+            to confirm your email.
+            You have ten hours to confirm your email, or you'll have to try to sign up again!
         </p>
-    </article>
+    </main>
 </main>
 
 

@@ -1,5 +1,6 @@
 package me.john.amiscaray.blogapi.entities
 
+import java.sql.Timestamp
 import javax.persistence.*
 
 // TODO : Change likes to separate fields for different reactions
@@ -13,6 +14,8 @@ data class BlogPost(
 
     @ManyToOne
     val author: User,
+
+    val timePosted: Timestamp,
 
     val wowReactions: Int = 0,
     val likeReactions: Int = 0,

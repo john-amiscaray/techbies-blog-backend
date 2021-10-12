@@ -52,7 +52,7 @@ class SecurityConfig(private val userDetailsService: UserDetailsService,
             .antMatchers("/v2/**")
             .antMatchers("/webjars/**")
             .antMatchers("/swagger-resources/**")
-            .antMatchers("/views/activate/account")
+            .antMatchers("/views/**")
     }
 
     @Throws(java.lang.Exception::class)
