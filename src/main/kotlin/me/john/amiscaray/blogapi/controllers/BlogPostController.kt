@@ -58,8 +58,9 @@ class BlogPostController(private val blogPostService: BlogPostService,
 
     }
 
-    @ApiOperation(value = "get recent blog posts. Returns array of BlogPostDtos (see models below) " +
-            "| NOT IMPLEMENTED", notes = "You can set how many blog posts you want to retrieve via query parameter. " +
+    @ApiOperation(value = "get recent blog posts. Returns array of BlogPostDtos (see models below). " +
+            "No authorization header required for this endpoint",
+        notes = "You can set how many blog posts you want to retrieve via query parameter. " +
             "See query parameters in the docs for this endpoint. ")
     @ApiPageable
     @GetMapping("/recent")
@@ -68,7 +69,8 @@ class BlogPostController(private val blogPostService: BlogPostService,
         return ResponseEntity.ok(blogPostService.getRecentPosts(pageable as PageRequest))
     }
 
-    @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below) ")
+    @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below). " +
+            "No authorization header required for this endpoint ")
     @GetMapping("/post/{postId}")
     fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<BlogPostDto>{
 
