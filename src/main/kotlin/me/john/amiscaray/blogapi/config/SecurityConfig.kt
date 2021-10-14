@@ -46,8 +46,7 @@ class SecurityConfig(private val userDetailsService: UserDetailsService,
         logger.info("Configured paths to ignore")
 
         web.ignoring()
-            .antMatchers("/auth/signup")
-            .antMatchers("/auth/login")
+            .antMatchers("/auth/**")
             .antMatchers("/swagger-ui.html")
             .antMatchers("/v2/**")
             .antMatchers("/webjars/**")

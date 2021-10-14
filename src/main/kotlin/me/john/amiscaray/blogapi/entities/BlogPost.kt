@@ -1,5 +1,6 @@
 package me.john.amiscaray.blogapi.entities
 
+import me.john.amiscaray.blogapi.domain.BlogPostDto
 import java.sql.Timestamp
 import javax.persistence.*
 
@@ -50,4 +51,11 @@ data class BlogPost(
     override fun hashCode(): Int {
         return id.hashCode()
     }
+
+    fun toDto(): BlogPostDto{
+
+        return BlogPostDto(id, title, content, tags)
+
+    }
+
 }

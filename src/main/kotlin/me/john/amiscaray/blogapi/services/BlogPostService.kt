@@ -5,13 +5,15 @@ import me.john.amiscaray.blogapi.domain.BookmarkRequest
 import me.john.amiscaray.blogapi.domain.CommentDto
 import me.john.amiscaray.blogapi.domain.ReactionRequest
 import me.john.amiscaray.blogapi.entities.BlogPost
+import org.springframework.data.domain.PageRequest
+import java.awt.print.Pageable
 import javax.xml.stream.events.Comment
 
 interface BlogPostService {
 
-    fun getBlogPostsOfUser(): Set<BlogPost>
+    fun getBlogPostsOfUser(): Set<BlogPostDto>
 
-    fun getBookMarksOfUser(): Set<BlogPost>
+    fun getBookMarksOfUser(): Set<BlogPostDto>
 
     fun processReactionRequest(reactionRequest: ReactionRequest)
 
@@ -30,5 +32,7 @@ interface BlogPostService {
     fun editBlogPost(id: Long, blogPost: BlogPostDto)
 
     fun getBlogPostById(id: Long): BlogPostDto
+
+    fun getRecentPosts(pageable: PageRequest): Set<BlogPostDto>
 
 }

@@ -2,13 +2,17 @@ package me.john.amiscaray.blogapi.controllers
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import me.john.amiscaray.blogapi.annotations.ApiPageable
 import me.john.amiscaray.blogapi.domain.BlogPostDto
 import me.john.amiscaray.blogapi.services.BlogPostService
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import springfox.documentation.annotations.ApiIgnore
 import java.net.URI
 
 @Api(description = "Controller for managing blog posts")
@@ -19,6 +23,8 @@ class BlogPostController(private val blogPostService: BlogPostService,
 
     @Value("\${app.origin}")
     private lateinit var origin: String
+
+    private val logger = LoggerFactory.getLogger(BlogPostController::class.java)
 
     @ApiOperation(value = "post a blog post", notes = "If successful, returns 201 " +
             "response with path to get that new blog post")
@@ -54,21 +60,12 @@ class BlogPostController(private val blogPostService: BlogPostService,
 
     @ApiOperation(value = "get recent blog posts. Returns array of BlogPostDtos (see models below) " +
             "| NOT IMPLEMENTED", notes = "You can set how many blog posts you want to retrieve via query parameter. " +
-            "See query parameters in the docs for this endpoint.")
+            "See query parameters in the docs for this endpoint. ")
+    @ApiPageable
     @GetMapping("/recent")
-    fun getRecent(pageable: Pageable): ResponseEntity<Any>{
+    fun getRecent(@ApiIgnore pageable: Pageable): ResponseEntity<Set<BlogPostDto>>{
 
-        return notImplementedResponse
-
-    }
-
-    @ApiOperation(value = "get new blog posts. Returns array of BlogPostDtos (see models below) " +
-            "| NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
-    @GetMapping("/new")
-    fun getNew(pageable: Pageable): ResponseEntity<Any>{
-
-        return notImplementedResponse
-
+        return ResponseEntity.ok(blogPostService.getRecentPosts(pageable as PageRequest))
     }
 
     @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below) ")

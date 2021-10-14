@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface BlogPostRepository : PagingAndSortingRepository<BlogPost, Long>{
 
-    fun findAllByAuthorAndTagsContaining(author: User, tags: String)
+    fun findAllByAuthorAndTagsContaining(author: User, tags: String): Set<BlogPost>
 
 }

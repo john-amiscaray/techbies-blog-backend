@@ -1,12 +1,13 @@
 package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.BlogPostRepository
-import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.BlogPostDto
 import me.john.amiscaray.blogapi.domain.BookmarkRequest
 import me.john.amiscaray.blogapi.domain.CommentDto
 import me.john.amiscaray.blogapi.domain.ReactionRequest
 import me.john.amiscaray.blogapi.entities.BlogPost
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import javax.xml.stream.events.Comment
@@ -14,11 +15,11 @@ import javax.xml.stream.events.Comment
 @Service
 class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
                          private val userService: UserService) : BlogPostService {
-    override fun getBlogPostsOfUser(): Set<BlogPost> {
+    override fun getBlogPostsOfUser(): Set<BlogPostDto> {
         TODO("Not yet implemented")
     }
 
-    override fun getBookMarksOfUser(): Set<BlogPost> {
+    override fun getBookMarksOfUser(): Set<BlogPostDto> {
         TODO("Not yet implemented")
     }
 
@@ -65,5 +66,13 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
     override fun getBlogPostById(id: Long): BlogPostDto {
         val blogPost = blogPostRepo.findById(id).orElseThrow()
         return BlogPostDto(blogPost.id, blogPost.title, blogPost.content, blogPost.tags)
+    }
+
+    override fun getRecentPosts(pageable: PageRequest): Set<BlogPostDto> {
+        val recentPageable = PageRequest.of(pageable.pageNumber,
+            pageable.pageSize, Sort.by(Sort.Direction.DESC, "timePosted"))
+        return blogPostRepo.findAll(recentPageable).map {
+            it.toDto()
+        }.toSet()
     }
 }
