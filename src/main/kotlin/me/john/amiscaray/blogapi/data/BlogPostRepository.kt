@@ -11,4 +11,6 @@ interface BlogPostRepository : PagingAndSortingRepository<BlogPost, Long>{
 
     fun findAllByAuthorAndTagsContaining(author: User, tags: String): Set<BlogPost>
 
+    fun existsByIdAndAuthor(id: Long, author: User): Boolean
+
 }

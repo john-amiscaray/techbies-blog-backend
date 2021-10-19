@@ -6,6 +6,8 @@ import me.john.amiscaray.blogapi.domain.BookmarkRequest
 import me.john.amiscaray.blogapi.domain.CommentDto
 import me.john.amiscaray.blogapi.domain.ReactionRequest
 import me.john.amiscaray.blogapi.entities.BlogPost
+import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
+import me.john.amiscaray.blogapi.exceptions.TechbiesIllegalBlogAccessException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -56,7 +58,14 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
     }
 
     override fun deleteBlogPost(id: Long) {
-        TODO("Not yet implemented")
+        if(!blogPostRepo.existsById(id)){
+            throw TechbiesBlogPostNotFoundException()
+        }
+        val user = userService.getCurrentlySignedInUser()
+        if(!blogPostRepo.existsByIdAndAuthor(id, user)){
+            throw TechbiesIllegalBlogAccessException()
+        }
+        blogPostRepo.deleteById(id)
     }
 
     override fun editBlogPost(id: Long, blogPost: BlogPostDto) {

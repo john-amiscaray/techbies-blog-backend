@@ -4,12 +4,15 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.annotations.ApiPageable
 import me.john.amiscaray.blogapi.domain.BlogPostDto
+import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
+import me.john.amiscaray.blogapi.exceptions.TechbiesIllegalBlogAccessException
 import me.john.amiscaray.blogapi.services.BlogPostService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import springfox.documentation.annotations.ApiIgnore
@@ -23,8 +26,6 @@ class BlogPostController(private val blogPostService: BlogPostService,
 
     @Value("\${app.origin}")
     private lateinit var origin: String
-
-    private val logger = LoggerFactory.getLogger(BlogPostController::class.java)
 
     @ApiOperation(value = "post a blog post", notes = "If successful, returns 201 " +
             "response with path to get that new blog post")
@@ -54,7 +55,17 @@ class BlogPostController(private val blogPostService: BlogPostService,
     @DeleteMapping("/post/{postId}")
     fun deleteBlogPost(@PathVariable("postId") id: Long): ResponseEntity<Any>{
 
-        return notImplementedResponse
+        return try{
+            blogPostService.deleteBlogPost(id)
+            ResponseEntity.noContent().build()
+        }catch (ex: TechbiesBlogPostNotFoundException){
+            ResponseEntity
+                .notFound()
+                .build()
+        }catch (ex: TechbiesIllegalBlogAccessException){
+            ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ex.message)
+        }
 
     }
 

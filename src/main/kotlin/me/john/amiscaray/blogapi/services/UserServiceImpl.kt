@@ -3,6 +3,7 @@ package me.john.amiscaray.blogapi.services
 import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.AuthRequest
 import me.john.amiscaray.blogapi.entities.User
+import me.john.amiscaray.blogapi.exceptions.TechbiesUserNotFoundException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -45,7 +46,7 @@ class UserServiceImpl(private val userRepo: UserRepository,
 
     override fun getCurrentlySignedInUser(): User {
         val auth = SecurityContextHolder.getContext().authentication as UsernamePasswordAuthenticationToken
-        return userRepo.findUserByEmail(auth.principal as String) ?: throw NoSuchElementException("User not found")
+        return userRepo.findUserByEmail(auth.principal as String) ?: throw TechbiesUserNotFoundException()
     }
 
     override fun activateAccount(id: Long) {
@@ -54,13 +55,13 @@ class UserServiceImpl(private val userRepo: UserRepository,
     }
 
     override fun activateAccount(email: String) {
-        val user = userRepo.findUserByEmail(email) ?: throw NoSuchElementException("User not found")
+        val user = userRepo.findUserByEmail(email) ?: throw TechbiesUserNotFoundException()
         user.accountActivated = true
         userRepo.save(user)
     }
 
     override fun deleteUnactivatedUser(email: String) {
-        val user = userRepo.findUserByEmail(email) ?: throw NoSuchElementException("User not found")
+        val user = userRepo.findUserByEmail(email) ?: throw TechbiesUserNotFoundException()
         if(!user.accountActivated){
             userRepo.delete(user)
         }
