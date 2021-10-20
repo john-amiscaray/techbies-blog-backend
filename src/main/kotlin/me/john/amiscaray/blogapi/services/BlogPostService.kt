@@ -5,8 +5,8 @@ import me.john.amiscaray.blogapi.domain.BookmarkRequest
 import me.john.amiscaray.blogapi.domain.CommentDto
 import me.john.amiscaray.blogapi.domain.ReactionRequest
 import me.john.amiscaray.blogapi.entities.BlogPost
+import me.john.amiscaray.blogapi.entities.User
 import org.springframework.data.domain.PageRequest
-import java.awt.print.Pageable
 import javax.xml.stream.events.Comment
 
 interface BlogPostService {
@@ -34,5 +34,9 @@ interface BlogPostService {
     fun getBlogPostById(id: Long): BlogPostDto
 
     fun getRecentPosts(pageable: PageRequest): Set<BlogPostDto>
+
+    fun checkUserIsOwnerOrThrow(blogPostId: Long): User
+
+    fun blogPostExistsOrThrow(blogPostId: Long)
 
 }

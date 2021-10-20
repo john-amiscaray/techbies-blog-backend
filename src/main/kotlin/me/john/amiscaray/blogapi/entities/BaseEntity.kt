@@ -10,5 +10,5 @@ import javax.persistence.MappedSuperclass
 open class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long
+    var id: Long
 ) : Serializable

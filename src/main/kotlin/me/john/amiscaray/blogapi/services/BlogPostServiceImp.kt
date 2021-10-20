@@ -6,6 +6,8 @@ import me.john.amiscaray.blogapi.domain.BookmarkRequest
 import me.john.amiscaray.blogapi.domain.CommentDto
 import me.john.amiscaray.blogapi.domain.ReactionRequest
 import me.john.amiscaray.blogapi.entities.BlogPost
+import me.john.amiscaray.blogapi.entities.User
+import me.john.amiscaray.blogapi.exceptions.TechbiesBadRequestException
 import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
 import me.john.amiscaray.blogapi.exceptions.TechbiesIllegalBlogAccessException
 import org.springframework.data.domain.PageRequest
@@ -47,10 +49,11 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
 
     override fun saveBlogPost(blogPost: BlogPostDto): BlogPost {
         val author = userService.getCurrentlySignedInUser()
+        val errorReason = "Missing blog info"
         val blogPostEntity = BlogPost(
-            title=blogPost.title,
-            content=blogPost.content,
-            tags=blogPost.tags,
+            title=blogPost.title ?: throw TechbiesBadRequestException(errorReason),
+            content=blogPost.content ?: throw TechbiesBadRequestException(errorReason),
+            tags=blogPost.tags ?: throw TechbiesBadRequestException(errorReason),
             author=author,
             timePosted=Timestamp(System.currentTimeMillis())
         )
@@ -61,15 +64,25 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
         if(!blogPostRepo.existsById(id)){
             throw TechbiesBlogPostNotFoundException()
         }
-        val user = userService.getCurrentlySignedInUser()
-        if(!blogPostRepo.existsByIdAndAuthor(id, user)){
-            throw TechbiesIllegalBlogAccessException()
-        }
+        checkUserIsOwnerOrThrow(id)
         blogPostRepo.deleteById(id)
     }
 
     override fun editBlogPost(id: Long, blogPost: BlogPostDto) {
-        TODO("Not yet implemented")
+
+        blogPostExistsOrThrow(id)
+        val originalPost = blogPostRepo.findById(id).orElseThrow()
+        val user = checkUserIsOwnerOrThrow(id)
+        val blogPostEntity = BlogPost(
+            title=blogPost.title ?: originalPost.title,
+            content=blogPost.content ?: originalPost.content,
+            tags=blogPost.tags ?: originalPost.tags,
+            author=user,
+            timePosted=Timestamp(System.currentTimeMillis())
+        )
+        blogPostEntity.id=id
+        blogPostRepo.save(blogPostEntity)
+
     }
 
     override fun getBlogPostById(id: Long): BlogPostDto {
@@ -84,4 +97,20 @@ class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
             it.toDto()
         }.toSet()
     }
+
+    override fun checkUserIsOwnerOrThrow(blogPostId: Long): User {
+
+        val user = userService.getCurrentlySignedInUser()
+        if(!blogPostRepo.existsByIdAndAuthor(blogPostId, user)){
+            throw TechbiesIllegalBlogAccessException()
+        }
+        return user
+    }
+
+    override fun blogPostExistsOrThrow(blogPostId: Long) {
+        if(!blogPostRepo.existsById(blogPostId)){
+            throw TechbiesBlogPostNotFoundException()
+        }
+    }
+
 }
