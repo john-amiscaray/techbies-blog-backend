@@ -85,7 +85,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
         notes = "You can set how many blog posts you want to retrieve via query parameter. " +
             "See query parameters in the docs for this endpoint. ")
     @ApiPageable
-    @GetMapping("/recent")
+    @GetMapping("/public/recent")
     fun getRecent(@ApiIgnore pageable: Pageable): ResponseEntity<Set<BlogPostDto>>{
 
         return ResponseEntity.ok(blogPostService.getRecentPosts(pageable as PageRequest))
@@ -93,7 +93,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
 
     @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below). " +
             "No authorization header required for this endpoint ")
-    @GetMapping("/post/{postId}")
+    @GetMapping("/public/post/{postId}")
     fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<BlogPostDto>{
 
         return try{
@@ -102,6 +102,14 @@ class BlogPostController(private val blogPostService: BlogPostService) {
             ResponseEntity.notFound()
                 .build()
         }
+
+    }
+
+    @ApiOperation(value = "Get all the blog posts for a particular user. No authorization header required for this endpoint")
+    @GetMapping("/your-posts")
+    fun getYourPosts(): ResponseEntity<Set<BlogPostDto>>{
+
+        return ResponseEntity.ok(blogPostService.getBlogPostsOfUser())
 
     }
 

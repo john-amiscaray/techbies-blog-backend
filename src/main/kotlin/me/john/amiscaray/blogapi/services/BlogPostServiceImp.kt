@@ -20,7 +20,10 @@ import javax.xml.stream.events.Comment
 class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
                          private val userService: UserService) : BlogPostService {
     override fun getBlogPostsOfUser(): Set<BlogPostDto> {
-        TODO("Not yet implemented")
+        return blogPostRepo.findAllByAuthor(userService.getCurrentlySignedInUser())
+            .map {
+                it.toDto()
+            }.toSet()
     }
 
     override fun getBookMarksOfUser(): Set<BlogPostDto> {

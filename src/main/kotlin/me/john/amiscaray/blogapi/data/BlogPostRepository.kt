@@ -13,4 +13,6 @@ interface BlogPostRepository : PagingAndSortingRepository<BlogPost, Long>{
 
     fun existsByIdAndAuthor(id: Long, author: User): Boolean
 
+    fun findAllByAuthor(author: User): Set<BlogPost>
+
 }
