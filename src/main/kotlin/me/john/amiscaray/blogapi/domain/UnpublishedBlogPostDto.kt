@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 
 @ApiModel
-data class BlogPostDto(
+data class UnpublishedBlogPostDto(
     @ApiModelProperty(value = "the id for the blog post")
     val id: Long?,
     @ApiModelProperty(value = "title of the blog post")

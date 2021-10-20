@@ -3,13 +3,11 @@ package me.john.amiscaray.blogapi.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.annotations.ApiPageable
-import me.john.amiscaray.blogapi.domain.BlogPostDto
+import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
 import me.john.amiscaray.blogapi.exceptions.TechbiesBadRequestException
 import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
 import me.john.amiscaray.blogapi.exceptions.TechbiesIllegalBlogAccessException
 import me.john.amiscaray.blogapi.services.BlogPostService
-import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -30,7 +28,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
     @ApiOperation(value = "post a blog post", notes = "If successful, returns 201 " +
             "response with path to get that new blog post")
     @PostMapping
-    fun createBlogPost(@RequestBody blogPostDto: BlogPostDto): ResponseEntity<Any>{
+    fun createBlogPost(@RequestBody blogPostDto: UnpublishedBlogPostDto): ResponseEntity<Any>{
 
         return try {
             val newPost = blogPostService.saveBlogPost(blogPostDto)
@@ -48,7 +46,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
 
     @ApiOperation(value = "edit a blog post | NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
     @PatchMapping("/post/{postId}")
-    fun editBlogPost(@PathVariable("postId") id: Long, @RequestBody blogPost: BlogPostDto): ResponseEntity<Any>{
+    fun editBlogPost(@PathVariable("postId") id: Long, @RequestBody blogPost: UnpublishedBlogPostDto): ResponseEntity<Any>{
 
         return try{
             blogPostService.editBlogPost(id, blogPost)
@@ -86,7 +84,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
             "See query parameters in the docs for this endpoint. ")
     @ApiPageable
     @GetMapping("/public/recent")
-    fun getRecent(@ApiIgnore pageable: Pageable): ResponseEntity<Set<BlogPostDto>>{
+    fun getRecent(@ApiIgnore pageable: Pageable): ResponseEntity<Set<UnpublishedBlogPostDto>>{
 
         return ResponseEntity.ok(blogPostService.getRecentPosts(pageable as PageRequest))
     }
@@ -94,7 +92,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
     @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below). " +
             "No authorization header required for this endpoint ")
     @GetMapping("/public/post/{postId}")
-    fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<BlogPostDto>{
+    fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<UnpublishedBlogPostDto>{
 
         return try{
             ResponseEntity.ok(blogPostService.getBlogPostById(id))
@@ -107,7 +105,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
 
     @ApiOperation(value = "Get all the blog posts for the logged in user.")
     @GetMapping("/your-posts")
-    fun getYourPosts(): ResponseEntity<Set<BlogPostDto>>{
+    fun getYourPosts(): ResponseEntity<Set<UnpublishedBlogPostDto>>{
 
         return ResponseEntity.ok(blogPostService.getBlogPostsOfUser())
 

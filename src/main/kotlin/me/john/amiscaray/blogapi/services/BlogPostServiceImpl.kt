@@ -1,10 +1,7 @@
 package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.BlogPostRepository
-import me.john.amiscaray.blogapi.domain.BlogPostDto
-import me.john.amiscaray.blogapi.domain.BookmarkRequest
-import me.john.amiscaray.blogapi.domain.CommentDto
-import me.john.amiscaray.blogapi.domain.ReactionRequest
+import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
 import me.john.amiscaray.blogapi.entities.BlogPost
 import me.john.amiscaray.blogapi.entities.User
 import me.john.amiscaray.blogapi.exceptions.TechbiesBadRequestException
@@ -19,7 +16,7 @@ import javax.xml.stream.events.Comment
 @Service
 class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
                           private val userService: UserService) : BlogPostService {
-    override fun getBlogPostsOfUser(): Set<BlogPostDto> {
+    override fun getBlogPostsOfUser(): Set<UnpublishedBlogPostDto> {
         return blogPostRepo.findAllByAuthor(userService.getCurrentlySignedInUser())
             .map {
                 it.toDto()
@@ -34,7 +31,7 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
         TODO("Not yet implemented")
     }
 
-    override fun saveBlogPost(blogPost: BlogPostDto): BlogPost {
+    override fun saveBlogPost(blogPost: UnpublishedBlogPostDto): BlogPost {
         val author = userService.getCurrentlySignedInUser()
         val errorReason = "Missing blog info"
         val blogPostEntity = BlogPost(
@@ -55,7 +52,7 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
         blogPostRepo.deleteById(id)
     }
 
-    override fun editBlogPost(id: Long, blogPost: BlogPostDto) {
+    override fun editBlogPost(id: Long, blogPost: UnpublishedBlogPostDto) {
 
         blogPostExistsOrThrow(id)
         val originalPost = blogPostRepo.findById(id).orElseThrow()
@@ -72,12 +69,12 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
 
     }
 
-    override fun getBlogPostById(id: Long): BlogPostDto {
+    override fun getBlogPostById(id: Long): UnpublishedBlogPostDto {
         val blogPost = blogPostRepo.findById(id).orElseThrow()
-        return BlogPostDto(blogPost.id, blogPost.title, blogPost.content, blogPost.tags)
+        return UnpublishedBlogPostDto(blogPost.id, blogPost.title, blogPost.content, blogPost.tags)
     }
 
-    override fun getRecentPosts(pageable: PageRequest): Set<BlogPostDto> {
+    override fun getRecentPosts(pageable: PageRequest): Set<UnpublishedBlogPostDto> {
         val recentPageable = PageRequest.of(pageable.pageNumber,
             pageable.pageSize, Sort.by(Sort.Direction.DESC, "timePosted"))
         return blogPostRepo.findAll(recentPageable).map {
