@@ -13,14 +13,6 @@ interface BlogPostService {
 
     fun getBlogPostsOfUser(): Set<BlogPostDto>
 
-    fun getBookMarksOfUser(): Set<BlogPostDto>
-
-    fun processReactionRequest(reactionRequest: ReactionRequest)
-
-    fun processBookmarkRequest(bookMarkRequest: BookmarkRequest)
-
-    fun commentOnPost(blogPostId: Long, comment: CommentDto)
-
     fun getCommentsOnPost(blogPostId: Long): Set<Comment>
 
     fun getUserFeed(): Set<BlogPost>

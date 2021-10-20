@@ -17,29 +17,13 @@ import java.sql.Timestamp
 import javax.xml.stream.events.Comment
 
 @Service
-class BlogPostServiceImp(private val blogPostRepo: BlogPostRepository,
-                         private val userService: UserService) : BlogPostService {
+class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
+                          private val userService: UserService) : BlogPostService {
     override fun getBlogPostsOfUser(): Set<BlogPostDto> {
         return blogPostRepo.findAllByAuthor(userService.getCurrentlySignedInUser())
             .map {
                 it.toDto()
             }.toSet()
-    }
-
-    override fun getBookMarksOfUser(): Set<BlogPostDto> {
-        TODO("Not yet implemented")
-    }
-
-    override fun processReactionRequest(reactionRequest: ReactionRequest) {
-        TODO("Not yet implemented")
-    }
-
-    override fun processBookmarkRequest(bookMarkRequest: BookmarkRequest) {
-        TODO("Not yet implemented")
-    }
-
-    override fun commentOnPost(blogPostId: Long, comment: CommentDto) {
-        TODO("Not yet implemented")
     }
 
     override fun getCommentsOnPost(blogPostId: Long): Set<Comment> {
