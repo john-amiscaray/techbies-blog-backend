@@ -105,7 +105,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
 
     }
 
-    @ApiOperation(value = "Get all the blog posts for the logged in user. ")
+    @ApiOperation(value = "Get all the blog posts for the logged in user.")
     @GetMapping("/your-posts")
     fun getYourPosts(): ResponseEntity<Set<BlogPostDto>>{
 
