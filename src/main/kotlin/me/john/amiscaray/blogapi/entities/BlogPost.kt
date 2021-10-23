@@ -1,5 +1,6 @@
 package me.john.amiscaray.blogapi.entities
 
+import me.john.amiscaray.blogapi.domain.PublishedBlogPostDto
 import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
 import java.sql.Timestamp
 import javax.persistence.*
@@ -52,9 +53,19 @@ data class BlogPost(
         return id.hashCode()
     }
 
-    fun toDto(): UnpublishedBlogPostDto{
+    fun toUnpublishedBlogPostDto(): UnpublishedBlogPostDto{
 
         return UnpublishedBlogPostDto(id, title, content, tags)
+
+    }
+
+    fun toPublishedBlogPostDto(): PublishedBlogPostDto{
+
+        val commentDtos = comments.map {
+            it.toDto()
+        }.toSet()
+        return PublishedBlogPostDto(id, title, content, tags, commentDtos,
+            wowReactions, likeReactions, sadReactions, angryReactions)
 
     }
 

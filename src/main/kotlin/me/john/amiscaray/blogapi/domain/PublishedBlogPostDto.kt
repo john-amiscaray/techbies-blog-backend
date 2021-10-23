@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty
 
 @ApiModel
 class PublishedBlogPostDto(
+    id: Long=-1,
     title: String?,
     content: String?,
     tags: String?,
@@ -18,4 +19,4 @@ class PublishedBlogPostDto(
     val sadReactions: Int,
     @ApiModelProperty(value = "The number of angry reactions for the blog post")
     val angryReactions: Int
-): UnpublishedBlogPostDto(title=title, content=content, tags=tags)
+): UnpublishedBlogPostDto(id=id, title=title, content=content, tags=tags)

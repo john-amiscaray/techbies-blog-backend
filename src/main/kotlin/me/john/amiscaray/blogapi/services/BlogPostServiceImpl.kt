@@ -1,6 +1,7 @@
 package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.BlogPostRepository
+import me.john.amiscaray.blogapi.domain.PublishedBlogPostDto
 import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
 import me.john.amiscaray.blogapi.entities.BlogPost
 import me.john.amiscaray.blogapi.entities.User
@@ -16,10 +17,10 @@ import javax.xml.stream.events.Comment
 @Service
 class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
                           private val userService: UserService) : BlogPostService {
-    override fun getBlogPostsOfUser(): Set<UnpublishedBlogPostDto> {
+    override fun getBlogPostsOfUser(): Set<PublishedBlogPostDto> {
         return blogPostRepo.findAllByAuthor(userService.getCurrentlySignedInUser())
             .map {
-                it.toDto()
+                it.toPublishedBlogPostDto()
             }.toSet()
     }
 
@@ -69,16 +70,16 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
 
     }
 
-    override fun getBlogPostById(id: Long): UnpublishedBlogPostDto {
+    override fun getBlogPostById(id: Long): PublishedBlogPostDto {
         val blogPost = blogPostRepo.findById(id).orElseThrow()
-        return UnpublishedBlogPostDto(blogPost.id, blogPost.title, blogPost.content, blogPost.tags)
+        return blogPost.toPublishedBlogPostDto()
     }
 
-    override fun getRecentPosts(pageable: PageRequest): Set<UnpublishedBlogPostDto> {
+    override fun getRecentPosts(pageable: PageRequest): Set<PublishedBlogPostDto> {
         val recentPageable = PageRequest.of(pageable.pageNumber,
             pageable.pageSize, Sort.by(Sort.Direction.DESC, "timePosted"))
         return blogPostRepo.findAll(recentPageable).map {
-            it.toDto()
+            it.toPublishedBlogPostDto()
         }.toSet()
     }
 

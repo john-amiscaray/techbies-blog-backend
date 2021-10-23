@@ -3,6 +3,7 @@ package me.john.amiscaray.blogapi.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.annotations.ApiPageable
+import me.john.amiscaray.blogapi.domain.PublishedBlogPostDto
 import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
 import me.john.amiscaray.blogapi.exceptions.TechbiesBadRequestException
 import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
@@ -44,7 +45,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
 
     }
 
-    @ApiOperation(value = "edit a blog post | NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
+    @ApiOperation(value = "edit a blog post")
     @PatchMapping("/post/{postId}")
     fun editBlogPost(@PathVariable("postId") id: Long, @RequestBody blogPost: UnpublishedBlogPostDto): ResponseEntity<Any>{
 
@@ -60,7 +61,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
 
     }
 
-    @ApiOperation(value = "delete a blog post | NOT IMPLEMENTED", notes = "NOT IMPLEMENTED")
+    @ApiOperation(value = "delete a blog post")
     @DeleteMapping("/post/{postId}")
     fun deleteBlogPost(@PathVariable("postId") id: Long): ResponseEntity<Any>{
 
@@ -78,21 +79,21 @@ class BlogPostController(private val blogPostService: BlogPostService) {
 
     }
 
-    @ApiOperation(value = "get recent blog posts. Returns array of BlogPostDtos (see models below). " +
+    @ApiOperation(value = "get recent blog posts. Returns array of PublishedBlogPostDtos (see models below). " +
             "No authorization header required for this endpoint",
         notes = "You can set how many blog posts you want to retrieve via query parameter. " +
             "See query parameters in the docs for this endpoint. ")
     @ApiPageable
     @GetMapping("/public/recent")
-    fun getRecent(@ApiIgnore pageable: Pageable): ResponseEntity<Set<UnpublishedBlogPostDto>>{
+    fun getRecent(@ApiIgnore pageable: Pageable): ResponseEntity<Set<PublishedBlogPostDto>>{
 
         return ResponseEntity.ok(blogPostService.getRecentPosts(pageable as PageRequest))
     }
 
-    @ApiOperation(value = "get blog post by id. Returns BlogPostDto (see models below). " +
+    @ApiOperation(value = "get blog post by id. Returns UnpublishedBlogPostDto (see models below). " +
             "No authorization header required for this endpoint ")
     @GetMapping("/public/post/{postId}")
-    fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<UnpublishedBlogPostDto>{
+    fun getBlogPostById(@PathVariable("postId") id: Long): ResponseEntity<PublishedBlogPostDto>{
 
         return try{
             ResponseEntity.ok(blogPostService.getBlogPostById(id))
@@ -103,9 +104,10 @@ class BlogPostController(private val blogPostService: BlogPostService) {
 
     }
 
-    @ApiOperation(value = "Get all the blog posts for the logged in user.")
+    @ApiOperation(value = "Get all the blog posts for the logged in user." +
+            " Returns array of PublishedBlogPostDtos (see models belwo.")
     @GetMapping("/your-posts")
-    fun getYourPosts(): ResponseEntity<Set<UnpublishedBlogPostDto>>{
+    fun getYourPosts(): ResponseEntity<Set<PublishedBlogPostDto>>{
 
         return ResponseEntity.ok(blogPostService.getBlogPostsOfUser())
 

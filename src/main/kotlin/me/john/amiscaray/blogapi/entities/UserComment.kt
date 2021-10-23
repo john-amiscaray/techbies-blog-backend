@@ -1,5 +1,6 @@
 package me.john.amiscaray.blogapi.entities
 
+import me.john.amiscaray.blogapi.domain.CommentDto
 import javax.persistence.*
 
 @Entity
@@ -25,4 +26,11 @@ data class UserComment(
     override fun hashCode(): Int {
         return id.hashCode()
     }
+
+    fun toDto(): CommentDto{
+
+        return CommentDto(id, blogPost.id, content)
+
+    }
+
 }
