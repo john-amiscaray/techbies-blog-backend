@@ -80,7 +80,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
     }
 
     @ApiOperation(value = "get recent blog posts. Returns array of PublishedBlogPostDtos (see models below). " +
-            "No authorization header required for this endpoint",
+            "No authorization header required for this endpoint.",
         notes = "You can set how many blog posts you want to retrieve via query parameter. " +
             "See query parameters in the docs for this endpoint. ")
     @ApiPageable
@@ -105,7 +105,7 @@ class BlogPostController(private val blogPostService: BlogPostService) {
     }
 
     @ApiOperation(value = "Get all the blog posts for the logged in user." +
-            " Returns array of PublishedBlogPostDtos (see models belwo.")
+            " Returns array of PublishedBlogPostDtos (see models below).")
     @GetMapping("/your-posts")
     fun getYourPosts(): ResponseEntity<Set<PublishedBlogPostDto>>{
 
