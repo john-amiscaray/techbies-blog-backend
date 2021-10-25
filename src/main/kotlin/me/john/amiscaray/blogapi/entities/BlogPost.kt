@@ -19,13 +19,13 @@ data class BlogPost(
 
     val timePosted: Timestamp,
 
-    val wowReactions: Int = 0,
-    val likeReactions: Int = 0,
-    val worriedReactions: Int = 0,
-    val sadReactions: Int = 0,
-    val angryReactions: Int = 0,
+    var wowReactions: Int = 0,
+    var likeReactions: Int = 0,
+    var worriedReactions: Int = 0,
+    var sadReactions: Int = 0,
+    var angryReactions: Int = 0,
     @Lob
-    val coverImage: ByteArray? = null,
+    var coverImage: ByteArray? = null,
 
     @OneToMany(mappedBy = "blogPost")
     val comments: Set<UserComment> = HashSet(),

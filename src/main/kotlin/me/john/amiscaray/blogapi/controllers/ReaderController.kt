@@ -4,6 +4,8 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.domain.BookmarkRequest
 import me.john.amiscaray.blogapi.domain.ReactionRequest
+import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
+import me.john.amiscaray.blogapi.services.UserActionService
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -11,7 +13,8 @@ import org.springframework.web.bind.annotation.*
 @Api(description = "A controller for managing reader actions")
 @RestController
 @RequestMapping("/reader")
-class ReaderController(@Qualifier("notImplemented") private val notImplementedResponse: ResponseEntity<Any>) {
+class ReaderController(private val userActionService: UserActionService,
+                       @Qualifier("notImplemented") private val notImplementedResponse: ResponseEntity<Any>) {
 
     @ApiOperation(value = "add or remove a bookmark | NOT IMPLEMENTED")
     @PostMapping("/bookmark")
@@ -21,7 +24,7 @@ class ReaderController(@Qualifier("notImplemented") private val notImplementedRe
 
     }
 
-    @ApiOperation(value = "get user feed. Returns array of BlogPostDtos (see models below) | NOT IMPLEMENTED")
+    @ApiOperation(value = "Get user feed. Returns array of BlogPostDtos (see models below) | NOT IMPLEMENTED")
     @GetMapping("/feed")
     fun getUserFeed(): ResponseEntity<Any>{
 
@@ -29,11 +32,17 @@ class ReaderController(@Qualifier("notImplemented") private val notImplementedRe
 
     }
 
-    @ApiOperation(value = "add or remove a reaction | NOT IMPLEMENTED")
+    @ApiOperation(value = "Add or remove a reaction", notes = "Request body is a ReactionRequest (see models below).")
     @PostMapping("/reaction")
-    fun receiveReactionRequest(@RequestBody reactionRequest: ReactionRequest): ResponseEntity<Any>{
+    fun receiveReactionRequest(@RequestBody reactionRequest: ReactionRequest): ResponseEntity<String>{
 
-        return notImplementedResponse
+        return try{
+            userActionService.processReactionRequest(reactionRequest)
+            ResponseEntity.ok("Successfully processed reaction request")
+        }catch(ex: TechbiesBlogPostNotFoundException){
+            ResponseEntity
+                .notFound().build()
+        }
 
     }
 

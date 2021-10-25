@@ -1,13 +1,116 @@
 package me.john.amiscaray.blogapi.services
 
-import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
-import me.john.amiscaray.blogapi.domain.BookmarkRequest
-import me.john.amiscaray.blogapi.domain.CommentDto
-import me.john.amiscaray.blogapi.domain.ReactionRequest
+import me.john.amiscaray.blogapi.data.BlogPostRepository
+import me.john.amiscaray.blogapi.data.ReactionRecordRepository
+import me.john.amiscaray.blogapi.domain.*
+import me.john.amiscaray.blogapi.entities.UserReactionRecord
+import me.john.amiscaray.blogapi.exceptions.TechbiesBadRequestException
+import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
+import org.springframework.stereotype.Service
 
-class UserActionServiceImpl: UserActionService {
+@Service
+class UserActionServiceImpl(
+    private val blogPostRepo: BlogPostRepository,
+    private val reactionRecordRepository: ReactionRecordRepository,
+    private val userService: UserService
+): UserActionService {
+
     override fun processReactionRequest(reactionRequest: ReactionRequest) {
-        TODO("Not yet implemented")
+        val post = blogPostRepo.findById(reactionRequest.postId).orElseThrow {
+            TechbiesBlogPostNotFoundException()
+        }
+        val user = userService.getCurrentlySignedInUser()
+        val reactionId = UserReactionRecordPK(user, post)
+        val reactionRecord = if(!reactionRecordRepository.existsById(reactionId)){
+            reactionRecordRepository.save(UserReactionRecord(id=reactionId))
+        }else{
+            reactionRecordRepository.getById(reactionId)
+        }
+        val badRemoveRequest = TechbiesBadRequestException("Cannot remove reaction that is not there")
+        val badAddRequest = TechbiesBadRequestException("Cannot add reaction that's already there")
+        val deltaReaction = if(reactionRequest.isRemoveReaction){
+            when(reactionRequest.reaction){
+                ReactionRequest.ReactionType.Angry -> {
+                    if(!reactionRecord.hasAngry){
+                        throw badRemoveRequest
+                    }
+                }
+                ReactionRequest.ReactionType.Like -> {
+                    if(!reactionRecord.hasLike){
+                        throw badRemoveRequest
+                    }
+                }
+                ReactionRequest.ReactionType.Sad -> {
+                    if(!reactionRecord.hasSad){
+                        throw badRemoveRequest
+                    }
+                }
+                ReactionRequest.ReactionType.Worried -> {
+                    if(!reactionRecord.hasWorried){
+                        throw badRemoveRequest
+                    }
+                }
+                ReactionRequest.ReactionType.Wow -> {
+                    if(!reactionRecord.hasWow){
+                        throw badRemoveRequest
+                    }
+                }
+            }
+            -1
+        }else{
+            when(reactionRequest.reaction){
+                ReactionRequest.ReactionType.Angry -> {
+                    if(reactionRecord.hasAngry){
+                        throw badAddRequest
+                    }
+                }
+                ReactionRequest.ReactionType.Like -> {
+                    if(reactionRecord.hasLike){
+                        throw badAddRequest
+                    }
+                }
+                ReactionRequest.ReactionType.Sad -> {
+                    if(reactionRecord.hasSad){
+                        throw badAddRequest
+                    }
+                }
+                ReactionRequest.ReactionType.Worried -> {
+                    if(reactionRecord.hasWorried){
+                        throw badAddRequest
+                    }
+                }
+                ReactionRequest.ReactionType.Wow -> {
+                    if(reactionRecord.hasWow){
+                        throw badAddRequest
+                    }
+                }
+            }
+            1
+        }
+        when(reactionRequest.reaction){
+            ReactionRequest.ReactionType.Angry -> {
+                post.angryReactions += deltaReaction
+                reactionRecord.hasAngry = !reactionRecord.hasAngry
+            }
+            ReactionRequest.ReactionType.Like -> {
+                post.likeReactions += deltaReaction
+                reactionRecord.hasLike = !reactionRecord.hasLike
+            }
+            ReactionRequest.ReactionType.Sad -> {
+                post.sadReactions += deltaReaction
+                reactionRecord.hasSad = !reactionRecord.hasSad
+            }
+            ReactionRequest.ReactionType.Worried -> {
+                post.worriedReactions += deltaReaction
+                reactionRecord.hasWorried = !reactionRecord.hasWorried
+            }
+            ReactionRequest.ReactionType.Wow -> {
+                post.wowReactions += deltaReaction
+                reactionRecord.hasWow = !reactionRecord.hasWow
+            }
+        }
+        blogPostRepo.save(post)
+        reactionRecordRepository.save(reactionRecord)
     }
 
     override fun processBookmarkRequest(bookMarkRequest: BookmarkRequest) {
@@ -21,4 +124,9 @@ class UserActionServiceImpl: UserActionService {
     override fun getBookMarksOfUser(): Set<UnpublishedBlogPostDto> {
         TODO("Not yet implemented")
     }
+
+    override fun getUserFeed(): Set<PublishedBlogPostDto> {
+        TODO("Not yet implemented")
+    }
+
 }

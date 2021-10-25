@@ -24,14 +24,6 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
             }.toSet()
     }
 
-    override fun getCommentsOnPost(blogPostId: Long): Set<Comment> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getUserFeed(): Set<BlogPost> {
-        TODO("Not yet implemented")
-    }
-
     override fun saveBlogPost(blogPost: UnpublishedBlogPostDto): BlogPost {
         val author = userService.getCurrentlySignedInUser()
         val errorReason = "Missing blog info"

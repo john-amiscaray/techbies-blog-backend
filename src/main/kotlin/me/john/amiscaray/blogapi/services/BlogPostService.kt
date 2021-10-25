@@ -11,10 +11,6 @@ interface BlogPostService {
 
     fun getBlogPostsOfUser(): Set<PublishedBlogPostDto>
 
-    fun getCommentsOnPost(blogPostId: Long): Set<Comment>
-
-    fun getUserFeed(): Set<BlogPost>
-
     fun saveBlogPost(blogPost: UnpublishedBlogPostDto): BlogPost
 
     fun deleteBlogPost(id: Long)

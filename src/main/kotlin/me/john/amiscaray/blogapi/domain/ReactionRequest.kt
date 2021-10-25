@@ -5,11 +5,13 @@ import io.swagger.annotations.ApiModelProperty
 
 @ApiModel
 data class ReactionRequest(
+    @ApiModelProperty(value = "post id", required = true)
+    val postId: Long,
     @ApiModelProperty(value = "reaction", required = true)
-    private val reaction: ReactionType,
+    val reaction: ReactionType,
     @ApiModelProperty(value = "Whether or not this was a request to remove a reaction. " +
             "If false, adds a reaction.", required = true)
-    private val isRemoveReaction: Boolean
+    val isRemoveReaction: Boolean
 ) {
     enum class ReactionType{
 

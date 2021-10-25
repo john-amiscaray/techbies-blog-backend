@@ -1,9 +1,7 @@
 package me.john.amiscaray.blogapi.services
 
-import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
-import me.john.amiscaray.blogapi.domain.BookmarkRequest
-import me.john.amiscaray.blogapi.domain.CommentDto
-import me.john.amiscaray.blogapi.domain.ReactionRequest
+import me.john.amiscaray.blogapi.domain.*
+import me.john.amiscaray.blogapi.entities.BlogPost
 
 interface UserActionService {
 
@@ -14,5 +12,7 @@ interface UserActionService {
     fun commentOnPost(blogPostId: Long, comment: CommentDto)
 
     fun getBookMarksOfUser(): Set<UnpublishedBlogPostDto>
+
+    fun getUserFeed(): Set<PublishedBlogPostDto>
 
 }
