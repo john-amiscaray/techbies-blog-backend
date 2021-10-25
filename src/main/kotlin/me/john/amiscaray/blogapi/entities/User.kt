@@ -19,7 +19,7 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "blog_post_id")]
     )
-    val bookMarks: Set<BlogPost> = HashSet(),
+    var bookMarks: Set<BlogPost> = HashSet(),
 
     @OneToMany(mappedBy = "author")
     val comments: Set<UserComment> = HashSet(),
@@ -30,7 +30,7 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "blod_post_id")]
     )
-    val blogPostsRead: Set<BlogPost> = HashSet()
+    var blogPostsRead: Set<BlogPost> = HashSet()
 
 ): BaseEntity(-1){
 

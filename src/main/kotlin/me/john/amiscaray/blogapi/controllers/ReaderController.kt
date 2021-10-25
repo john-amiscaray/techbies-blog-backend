@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.*
 class ReaderController(private val userActionService: UserActionService,
                        @Qualifier("notImplemented") private val notImplementedResponse: ResponseEntity<Any>) {
 
-    @ApiOperation(value = "add or remove a bookmark | NOT IMPLEMENTED")
+    @ApiOperation(value = "Add or remove a bookmark", notes = "Request body is a BookmarkRequest (see models below).")
     @PostMapping("/bookmark")
-    fun receiveBookmarkRequest(@RequestBody bookmarkRequest: BookmarkRequest): ResponseEntity<Any>{
+    fun receiveBookmarkRequest(@RequestBody bookmarkRequest: BookmarkRequest): ResponseEntity<String>{
 
-        return notImplementedResponse
+        userActionService.processBookmarkRequest(bookmarkRequest)
+        return ResponseEntity.ok("Successfully processed request")
 
     }
 

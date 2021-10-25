@@ -2,18 +2,24 @@ package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.BlogPostRepository
 import me.john.amiscaray.blogapi.data.ReactionRecordRepository
+import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.*
+import me.john.amiscaray.blogapi.entities.BlogPost
 import me.john.amiscaray.blogapi.entities.UserReactionRecord
 import me.john.amiscaray.blogapi.exceptions.TechbiesBadRequestException
 import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class UserActionServiceImpl(
     private val blogPostRepo: BlogPostRepository,
     private val reactionRecordRepository: ReactionRecordRepository,
-    private val userService: UserService
+    private val userService: UserService,
+    private val userRepo: UserRepository
 ): UserActionService {
+
+    private val logger = LoggerFactory.getLogger(UserActionServiceImpl::class.java)
 
     override fun processReactionRequest(reactionRequest: ReactionRequest) {
         val post = blogPostRepo.findById(reactionRequest.postId).orElseThrow {
@@ -114,7 +120,21 @@ class UserActionServiceImpl(
     }
 
     override fun processBookmarkRequest(bookMarkRequest: BookmarkRequest) {
-        TODO("Not yet implemented")
+        val user = userService.getCurrentlySignedInUser()
+        val blogPost = blogPostRepo.findById(bookMarkRequest.blogPostId).orElseThrow()
+        if(!bookMarkRequest.isRemoveBookmark){
+            user.bookMarks = user.bookMarks.plus(blogPost)
+            blogPost.bookMarkedBy = blogPost.bookMarkedBy.plus(user)
+        }else{
+            user.bookMarks = user.bookMarks.filter {
+                it.id != bookMarkRequest.blogPostId
+            }.toMutableSet()
+            blogPost.bookMarkedBy = blogPost.bookMarkedBy.filter {
+                it.id != user.id
+            }.toMutableSet()
+        }
+        blogPostRepo.save(blogPost)
+        userRepo.save(user)
     }
 
     override fun commentOnPost(blogPostId: Long, comment: CommentDto) {

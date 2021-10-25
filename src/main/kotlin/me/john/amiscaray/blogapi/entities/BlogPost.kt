@@ -31,7 +31,7 @@ data class BlogPost(
     val comments: Set<UserComment> = HashSet(),
 
     @ManyToMany(mappedBy = "bookMarks")
-    val bookMarkedBy: Set<User> = HashSet(),
+    var bookMarkedBy: Set<User> = HashSet(),
 
     @ManyToMany(mappedBy = "blogPostsRead")
     val readBy: Set<User> = HashSet()
