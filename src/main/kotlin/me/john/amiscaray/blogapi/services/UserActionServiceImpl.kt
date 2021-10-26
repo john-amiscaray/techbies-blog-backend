@@ -1,10 +1,12 @@
 package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.BlogPostRepository
+import me.john.amiscaray.blogapi.data.CommentRepository
 import me.john.amiscaray.blogapi.data.ReactionRecordRepository
 import me.john.amiscaray.blogapi.data.UserRepository
 import me.john.amiscaray.blogapi.domain.*
 import me.john.amiscaray.blogapi.entities.BlogPost
+import me.john.amiscaray.blogapi.entities.UserComment
 import me.john.amiscaray.blogapi.entities.UserReactionRecord
 import me.john.amiscaray.blogapi.exceptions.TechbiesBadRequestException
 import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
@@ -16,10 +18,9 @@ class UserActionServiceImpl(
     private val blogPostRepo: BlogPostRepository,
     private val reactionRecordRepository: ReactionRecordRepository,
     private val userService: UserService,
-    private val userRepo: UserRepository
+    private val userRepo: UserRepository,
+    private val commentRepo: CommentRepository
 ): UserActionService {
-
-    private val logger = LoggerFactory.getLogger(UserActionServiceImpl::class.java)
 
     override fun processReactionRequest(reactionRequest: ReactionRequest) {
         val post = blogPostRepo.findById(reactionRequest.postId).orElseThrow {
@@ -137,8 +138,17 @@ class UserActionServiceImpl(
         userRepo.save(user)
     }
 
-    override fun commentOnPost(blogPostId: Long, comment: CommentDto) {
-        TODO("Not yet implemented")
+    override fun commentOnPost(comment: CommentDto) {
+        // Get entities
+        val user = userService.getCurrentlySignedInUser()
+        val blogPost = blogPostRepo.findById(comment.blogPostId).orElseThrow()
+        val commentEntity = commentRepo.save(UserComment(user, comment.content, blogPost))
+        // Alter entities
+        blogPost.comments = blogPost.comments.plus(commentEntity)
+        user.comments = user.comments.plus(commentEntity)
+        // Save them
+        blogPostRepo.save(blogPost)
+        userRepo.save(user)
     }
 
     override fun getBookMarksOfUser(): Set<UnpublishedBlogPostDto> {

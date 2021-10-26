@@ -22,7 +22,7 @@ data class User(
     var bookMarks: Set<BlogPost> = HashSet(),
 
     @OneToMany(mappedBy = "author")
-    val comments: Set<UserComment> = HashSet(),
+    var comments: Set<UserComment> = HashSet(),
 
     @ManyToMany
     @JoinTable(

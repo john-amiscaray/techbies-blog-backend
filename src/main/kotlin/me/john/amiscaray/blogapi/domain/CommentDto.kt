@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiModelProperty
 @ApiModel
 data class CommentDto(
     @ApiModelProperty(value = "id of the comment", required = false)
-    private val id: Long,
+    val id: Long,
     @ApiModelProperty(value = "id of the blog post", required = true)
-    private val blogPostId: Long,
+    val blogPostId: Long,
     @ApiModelProperty(value = "content of the comment", required = true)
-    private val content: String
+    val content: String
     )

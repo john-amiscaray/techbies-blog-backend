@@ -3,6 +3,7 @@ package me.john.amiscaray.blogapi.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.domain.BookmarkRequest
+import me.john.amiscaray.blogapi.domain.CommentDto
 import me.john.amiscaray.blogapi.domain.ReactionRequest
 import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
 import me.john.amiscaray.blogapi.services.UserActionService
@@ -47,12 +48,14 @@ class ReaderController(private val userActionService: UserActionService,
 
     }
 
-    @ApiOperation(value = "comment on blog post | NOT IMPLEMENTED", notes = "comment on a post, " +
-            "given the id of the post in the URL, and a CommentDto as the request body.")
-    @PostMapping("/comment/on/post/{postId}")
-    fun commentOnBlogPost(@PathVariable("postId") postId: Long): ResponseEntity<Any>{
+    @ApiOperation(value = "Comment on blog post", notes = "Comment on a post, " +
+            "given a CommentDto as the request body (see models below).")
+    @PostMapping("/comment")
+    fun commentOnBlogPost(@RequestBody comment: CommentDto): ResponseEntity<Void>{
 
-        return notImplementedResponse
+        userActionService.commentOnPost(comment)
+        return ResponseEntity.noContent()
+            .build()
 
     }
 

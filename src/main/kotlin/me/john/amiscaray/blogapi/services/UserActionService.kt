@@ -9,7 +9,7 @@ interface UserActionService {
 
     fun processBookmarkRequest(bookMarkRequest: BookmarkRequest)
 
-    fun commentOnPost(blogPostId: Long, comment: CommentDto)
+    fun commentOnPost(comment: CommentDto)
 
     fun getBookMarksOfUser(): Set<UnpublishedBlogPostDto>
 

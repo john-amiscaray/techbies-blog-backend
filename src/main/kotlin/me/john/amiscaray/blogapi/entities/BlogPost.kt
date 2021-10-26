@@ -28,7 +28,7 @@ data class BlogPost(
     var coverImage: ByteArray? = null,
 
     @OneToMany(mappedBy = "blogPost")
-    val comments: Set<UserComment> = HashSet(),
+    var comments: Set<UserComment> = HashSet(),
 
     @ManyToMany(mappedBy = "bookMarks")
     var bookMarkedBy: Set<User> = HashSet(),

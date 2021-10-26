@@ -6,10 +6,10 @@ import javax.persistence.*
 @Entity
 data class UserComment(
     @ManyToOne
-    private val author: User,
-    private val content: String,
+    val author: User,
+    val content: String,
     @ManyToOne
-    private val blogPost: BlogPost
+    val blogPost: BlogPost
 ): BaseEntity(-1){
 
     override fun equals(other: Any?): Boolean {
