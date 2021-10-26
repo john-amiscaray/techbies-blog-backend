@@ -59,6 +59,18 @@ class ReaderController(private val userActionService: UserActionService,
 
     }
 
+    @ApiOperation(value = "Delete blog post by id")
+    @DeleteMapping("/comment/{commentId}")
+    fun deleteCommentById(@PathVariable("commentId") commentId: Long): ResponseEntity<Void>{
+
+        userActionService.deleteCommentOnPost(commentId)
+
+        return ResponseEntity
+            .noContent()
+            .build()
+
+    }
+
 
 
 }

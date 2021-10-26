@@ -50,7 +50,7 @@ class UserServiceImpl(private val userRepo: UserRepository,
     }
 
     override fun activateAccount(id: Long) {
-        val user = userRepo.findById(id).orElseThrow()
+        val user = userRepo.findById(id).orElseThrow{ TechbiesUserNotFoundException() }
         user.accountActivated = true
     }
 

@@ -10,6 +10,8 @@ import me.john.amiscaray.blogapi.entities.UserComment
 import me.john.amiscaray.blogapi.entities.UserReactionRecord
 import me.john.amiscaray.blogapi.exceptions.TechbiesBadRequestException
 import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
+import me.john.amiscaray.blogapi.exceptions.TechbiesCommentNotFoundException
+import me.john.amiscaray.blogapi.exceptions.TechbiesIllegalCommentAccessException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -141,7 +143,7 @@ class UserActionServiceImpl(
     override fun commentOnPost(comment: CommentDto) {
         // Get entities
         val user = userService.getCurrentlySignedInUser()
-        val blogPost = blogPostRepo.findById(comment.blogPostId).orElseThrow()
+        val blogPost = blogPostRepo.findById(comment.blogPostId).orElseThrow{ TechbiesBlogPostNotFoundException() }
         val commentEntity = commentRepo.save(UserComment(user, comment.content, blogPost))
         // Alter entities
         blogPost.comments = blogPost.comments.plus(commentEntity)
@@ -157,6 +159,19 @@ class UserActionServiceImpl(
 
     override fun getUserFeed(): Set<PublishedBlogPostDto> {
         TODO("Not yet implemented")
+    }
+
+    override fun deleteCommentOnPost(commentId: Long) {
+        userOwnsCommentOrThrow(commentId)
+        commentRepo.deleteById(commentId)
+    }
+
+    override fun userOwnsCommentOrThrow(commentId: Long) {
+        val comment = commentRepo.findById(commentId).orElseThrow { TechbiesCommentNotFoundException() }
+        val user = userService.getCurrentlySignedInUser()
+        if (user != comment.author) {
+            throw TechbiesIllegalCommentAccessException()
+        }
     }
 
 }

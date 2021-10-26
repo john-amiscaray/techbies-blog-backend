@@ -15,4 +15,20 @@ data class UserReactionRecord(
     var hasWorried: Boolean=false,
     var hasSad: Boolean=false,
     var hasAngry: Boolean=false
-): Serializable
+): Serializable{
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UserReactionRecord
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+}

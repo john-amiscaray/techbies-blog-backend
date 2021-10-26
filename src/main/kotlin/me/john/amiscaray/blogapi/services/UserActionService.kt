@@ -15,4 +15,8 @@ interface UserActionService {
 
     fun getUserFeed(): Set<PublishedBlogPostDto>
 
+    fun deleteCommentOnPost(commentId: Long)
+
+    fun userOwnsCommentOrThrow(commentId: Long)
+
 }
