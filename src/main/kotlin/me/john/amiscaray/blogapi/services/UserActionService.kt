@@ -2,6 +2,7 @@ package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.domain.*
 import me.john.amiscaray.blogapi.entities.BlogPost
+import me.john.amiscaray.blogapi.entities.UserComment
 
 interface UserActionService {
 
@@ -17,6 +18,8 @@ interface UserActionService {
 
     fun deleteCommentOnPost(commentId: Long)
 
-    fun userOwnsCommentOrThrow(commentId: Long)
+    fun userOwnsCommentOrThrow(commentId: Long): UserComment
+
+    fun editComment(commentId: Long, editCommentRequest: EditCommentRequest)
 
 }

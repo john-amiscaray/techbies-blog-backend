@@ -166,12 +166,20 @@ class UserActionServiceImpl(
         commentRepo.deleteById(commentId)
     }
 
-    override fun userOwnsCommentOrThrow(commentId: Long) {
+    override fun userOwnsCommentOrThrow(commentId: Long): UserComment {
         val comment = commentRepo.findById(commentId).orElseThrow { TechbiesCommentNotFoundException() }
         val user = userService.getCurrentlySignedInUser()
         if (user != comment.author) {
             throw TechbiesIllegalCommentAccessException()
         }
+        return comment
     }
 
+    override fun editComment(commentId: Long, editCommentRequest: EditCommentRequest) {
+
+        val comment = userOwnsCommentOrThrow(commentId)
+        comment.content = editCommentRequest.newContent
+        commentRepo.save(comment)
+
+    }
 }

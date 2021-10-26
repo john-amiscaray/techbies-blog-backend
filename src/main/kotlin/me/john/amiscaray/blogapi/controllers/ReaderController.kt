@@ -4,6 +4,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import me.john.amiscaray.blogapi.domain.BookmarkRequest
 import me.john.amiscaray.blogapi.domain.CommentDto
+import me.john.amiscaray.blogapi.domain.EditCommentRequest
 import me.john.amiscaray.blogapi.domain.ReactionRequest
 import me.john.amiscaray.blogapi.exceptions.TechbiesBlogPostNotFoundException
 import me.john.amiscaray.blogapi.services.UserActionService
@@ -64,6 +65,20 @@ class ReaderController(private val userActionService: UserActionService,
     fun deleteCommentById(@PathVariable("commentId") commentId: Long): ResponseEntity<Void>{
 
         userActionService.deleteCommentOnPost(commentId)
+
+        return ResponseEntity
+            .noContent()
+            .build()
+
+    }
+
+    @ApiOperation(value = "Edit blog post", notes = "Edit a post, " +
+            "given a EditCommentRequest as the request body (see models below).")
+    @PatchMapping("/comment/{commentId}")
+    fun editComment(@PathVariable("commentId") commentId: Long,
+                    @RequestBody editCommentRequest: EditCommentRequest): ResponseEntity<Void>{
+
+        userActionService.editComment(commentId, editCommentRequest)
 
         return ResponseEntity
             .noContent()

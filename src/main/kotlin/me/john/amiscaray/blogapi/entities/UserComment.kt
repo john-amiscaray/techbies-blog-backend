@@ -7,7 +7,7 @@ import javax.persistence.*
 data class UserComment(
     @ManyToOne
     val author: User,
-    val content: String,
+    var content: String,
     @ManyToOne
     val blogPost: BlogPost
 ): BaseEntity(-1){
