@@ -3,7 +3,11 @@ package me.john.amiscaray.blogapi.entities
 import me.john.amiscaray.blogapi.domain.PublishedBlogPostDto
 import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
 import java.sql.Timestamp
+import java.util.*
+import java.util.stream.Collectors
+import java.util.stream.Stream
 import javax.persistence.*
+import kotlin.collections.HashSet
 
 // TODO : Change likes to separate fields for different reactions
 // TODO : Add time created as field
@@ -12,7 +16,6 @@ data class BlogPost(
 
     val title: String,
     val content: String,
-    val tags: String,
 
     @ManyToOne
     val author: User,
@@ -34,7 +37,10 @@ data class BlogPost(
     var bookMarkedBy: Set<User> = HashSet(),
 
     @ManyToMany(mappedBy = "blogPostsRead")
-    val readBy: Set<User> = HashSet()
+    val readBy: Set<User> = HashSet(),
+
+    @ManyToMany
+    val tags: Set<Tag>
 
 ): BaseEntity(-1) {
 
@@ -55,7 +61,7 @@ data class BlogPost(
 
     fun toUnpublishedBlogPostDto(): UnpublishedBlogPostDto{
 
-        return UnpublishedBlogPostDto(id, title, content, tags)
+        return UnpublishedBlogPostDto(id, title, content, tagsToString())
 
     }
 
@@ -64,8 +70,27 @@ data class BlogPost(
         val commentDtos = comments.map {
             it.toDto()
         }.toSet()
-        return PublishedBlogPostDto(id, title, content, tags, commentDtos,
-            wowReactions, likeReactions, sadReactions, angryReactions)
+        return PublishedBlogPostDto(id, title, content, tagsToString(),
+            commentDtos, wowReactions, likeReactions, sadReactions, angryReactions)
+
+    }
+
+    fun tagsToString(): String{
+
+        return tags.reduce{ acc, tag -> Tag("${acc.name},${tag.name}") }.name
+
+    }
+
+    companion object {
+
+        fun stringToTags(tagsRepr: String): Set<Tag>{
+
+            val tagStrings = tagsRepr.split(",")
+            return tagStrings.stream()
+                .map { Tag(it) }
+                .collect(Collectors.toSet())
+
+        }
 
     }
 

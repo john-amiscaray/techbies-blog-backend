@@ -30,7 +30,7 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
         val blogPostEntity = BlogPost(
             title=blogPost.title ?: throw TechbiesBadRequestException(errorReason),
             content=blogPost.content ?: throw TechbiesBadRequestException(errorReason),
-            tags=blogPost.tags ?: throw TechbiesBadRequestException(errorReason),
+            tags= blogPost.tags?.let { BlogPost.stringToTags(it) } ?: throw TechbiesBadRequestException(errorReason),
             author=author,
             timePosted=Timestamp(System.currentTimeMillis())
         )
@@ -53,7 +53,7 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
         val blogPostEntity = BlogPost(
             title=blogPost.title ?: originalPost.title,
             content=blogPost.content ?: originalPost.content,
-            tags=blogPost.tags ?: originalPost.tags,
+            tags= blogPost.tags?.let { BlogPost.stringToTags(it) } ?: originalPost.tags,
             author=user,
             timePosted=Timestamp(System.currentTimeMillis())
         )
