@@ -1,6 +1,7 @@
 package me.john.amiscaray.blogapi.services
 
 import me.john.amiscaray.blogapi.data.BlogPostRepository
+import me.john.amiscaray.blogapi.data.TagRepo
 import me.john.amiscaray.blogapi.domain.PublishedBlogPostDto
 import me.john.amiscaray.blogapi.domain.UnpublishedBlogPostDto
 import me.john.amiscaray.blogapi.entities.BlogPost
@@ -16,7 +17,7 @@ import javax.xml.stream.events.Comment
 
 @Service
 class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
-                          private val userService: UserService) : BlogPostService {
+                          private val userService: UserService, private val tagRepo: TagRepo) : BlogPostService {
     override fun getBlogPostsOfUser(): Set<PublishedBlogPostDto> {
         return blogPostRepo.findAllByAuthor(userService.getCurrentlySignedInUser())
             .map {
@@ -27,10 +28,16 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
     override fun saveBlogPost(blogPost: UnpublishedBlogPostDto): BlogPost {
         val author = userService.getCurrentlySignedInUser()
         val errorReason = "Missing blog info"
+        val tags = blogPost.tags?.let { BlogPost.stringToTags(it) } ?: throw TechbiesBadRequestException("Tags are required")
+        for(tag in tags){
+            if(!tagRepo.existsById(tag.name)){
+                tagRepo.save(tag)
+            }
+        }
         val blogPostEntity = BlogPost(
             title=blogPost.title ?: throw TechbiesBadRequestException(errorReason),
             content=blogPost.content ?: throw TechbiesBadRequestException(errorReason),
-            tags= blogPost.tags?.let { BlogPost.stringToTags(it) } ?: throw TechbiesBadRequestException(errorReason),
+            tags= tags,
             author=author,
             timePosted=Timestamp(System.currentTimeMillis())
         )
@@ -50,10 +57,18 @@ class BlogPostServiceImpl(private val blogPostRepo: BlogPostRepository,
         blogPostExistsOrThrow(id)
         val originalPost = blogPostRepo.findById(id).orElseThrow()
         val user = checkUserIsOwnerOrThrow(id)
+        val tags = blogPost.tags?.let { BlogPost.stringToTags(it) }
+        if(tags != null){
+            for(tag in tags){
+                if(!tagRepo.existsById(tag.name)){
+                    tagRepo.save(tag)
+                }
+            }
+        }
         val blogPostEntity = BlogPost(
             title=blogPost.title ?: originalPost.title,
             content=blogPost.content ?: originalPost.content,
-            tags= blogPost.tags?.let { BlogPost.stringToTags(it) } ?: originalPost.tags,
+            tags= tags ?: originalPost.tags,
             author=user,
             timePosted=Timestamp(System.currentTimeMillis())
         )
